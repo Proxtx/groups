@@ -1,0 +1,28 @@
+class socketHandler {
+  socket;
+  init = function () {
+    this.socket = io();
+  };
+
+  onMessage = [];
+
+  subscribe = function (service) {
+    var argsString = "";
+    for (var i = 1; i < arguments.length; i++) {
+      argsString += "$_$" + arguments[i];
+    }
+    this.socket.emit("message", "subscribe$_$" + service + argsString);
+
+    this.socket.on(
+      "message",
+      function (msg) {
+        for (var i in this.this.onMessage) {
+          var f = this.this.onMessage[i].bind(this.this);
+          f(msg);
+        }
+
+        this.socket.emit("message", "confirm");
+      }.bind({ this: this, socket: this.socket })
+    );
+  };
+}

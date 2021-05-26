@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Funnybee04/Groups.git"
+    "url": "git+https://github.com/Proxtx/groups.git"
   },
   "keywords": [
     "Micorsoft",
@@ -17,9 +17,9 @@
   "author": "Proxtx, Funnybee",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Funnybee04/Groups/issues"
+    "url": "https://github.com/Proxtx/groups/issues"
   },
-  "homepage": "https://github.com/Funnybee04/Groups#readme",
+  "homepage": "https://github.com/Proxtx/groups#readme",
   "dependencies": {
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",

@@ -1,0 +1,34 @@
+<script src="/static/utility.js"></script>
+<div
+  id="nodeTestDiv"
+  style="
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 100%;
+    height: 50%;
+    background-color: var(--bgL1);
+  "
+></div>
+<script>
+  async function main() {
+    await loadAllUtilityNodes(true);
+    var nodeId = processNodeObj(document.getElementById("nodeTestDiv"), [
+      {
+        name: "uBoxSmall",
+        title: "Test...",
+        left: "15%",
+        top: "15%",
+        width: "300px",
+        id: "changeNameBox",
+        nodes: [
+          { name: "uInput", id: "changeNameInput" },
+          { name: "uButtonMain", text: "Save" },
+          { name: "uButtonSecondary", text: "Cancel" },
+        ],
+      },
+    ]);
+    console.log(nodeId);
+  }
+  main();
+</script>

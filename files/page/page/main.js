@@ -1,0 +1,1 @@
+loadScreen("./screens/test");

@@ -1,0 +1,30 @@
+@font-face {
+  font-family: segeo;
+  src: url("/static/segeo.ttf");
+}
+.hidden {
+  display: none;
+}
+* {
+  margin: 0;
+  font-family: segeo;
+}
+*:focus {
+  outline: none;
+}
+
+:root {
+  --accentColor: #9ea2ff;
+  --accentColorDark: #6264a7;
+  --accentColorSlight: #323348;
+  --accentColorBright: #8a8fff;
+
+  --bgL1: #0a0a0a;
+  --bgL2: #141414;
+  --bgL3: #1f1f1f;
+  --bgL4: #292929;
+
+  --textColor: white;
+
+  --outline: #6a6a6a;
+}

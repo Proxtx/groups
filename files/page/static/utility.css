@@ -1,0 +1,65 @@
+.uInput {
+  background-color: var(--bgL3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 3px;
+  width: 100%;
+  height: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  color: var(--textColor);
+  margin-top: 10px;
+}
+
+.uInput:focus {
+  border-bottom: 2px solid var(--accentColor);
+}
+
+.uBox {
+  background-color: var(--bgL4);
+  border-radius: 2px;
+  padding: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 4px black;
+  color: var(--textColor);
+}
+
+.uBoxSmall {
+  padding: 10px;
+}
+
+.uButton {
+  border: 1px solid var(--outline);
+  border-radius: 2px;
+  background-color: transparent;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: var(--textColor);
+  margin-top: 10px;
+  margin-left: 10px;
+  float: right;
+  cursor: pointer;
+}
+
+.uButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.uButtonMain {
+  border: 0;
+  background-color: var(--accentColorDark);
+  padding-top: calc(5px + 2px / 2);
+  padding-bottom: calc(5px + 2px / 2);
+  padding-left: calc(10px + 2px / 2);
+  padding-right: calc(10px + 2px / 2);
+}
+
+.uButtonMain:hover {
+  background-color: var(--accentColorBright);
+}
