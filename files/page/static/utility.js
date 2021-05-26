@@ -5,6 +5,7 @@ var nodeClassNames = [
   "uBoxBig",
   "uButtonMain",
   "uButtonSecondary",
+  "uUserDisplay",
 ];
 
 var processNodeFunctions = {
@@ -30,6 +31,21 @@ var processNodeFunctions = {
   },
   uButton: function (node, obj) {
     node.innerHTML = obj.text;
+    if (obj.click) {
+      node.addEventListener("click", obj.click);
+    }
+  },
+  uInput: function (node, obj) {
+    if (obj.value) {
+      node.value = obj.value;
+    }
+    if (obj.placeholder) {
+      node.placeholder = obj.placeholder;
+    }
+  },
+  uUserDisplay: function (node, obj) {
+    node.children[0].src = obj.img;
+    node.children[1].innerHTML = obj.author;
   },
 };
 
@@ -38,6 +54,9 @@ function processNodeObj(parentObj, nodes) {
   for (var i in nodes) {
     var node = createElement(nodes[i].name, parentObj);
     nodeId[nodes[i].id] = node;
+    if (nodes[i].id) {
+      node.id = nodes[i].id;
+    }
     if (processNodeFunctions[nodes[i].name]) {
       var nodesSub = processNodeFunctions[nodes[i].name](node, nodes[i]);
     }

@@ -15,6 +15,7 @@ router.post("/data", async (req, res) => {
         req.body.data,
         req.body.key,
         req.body.userId,
+        req.body.email,
         req.body.password
       )
     );

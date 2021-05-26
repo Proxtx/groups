@@ -49,6 +49,9 @@ var authlvl = {
   profileImage: {
     lvl: 0,
   },
+  userId: {
+    lvl: 0,
+  },
 };
 
 class profile {
@@ -57,13 +60,15 @@ class profile {
     data,
     userKey,
     userId,
+    email,
     pwd,
     sysAuth,
     fullAuth = false
   ) {
     if (authlvl[data]) {
-      if ((authlvl[data].lvl == 0 || fullAuth) && userId) {
-        return await fetchDataUserId(db, data, userId);
+      if ((authlvl[data].lvl == 0 || fullAuth) && (userId || email)) {
+        if (userId) return await fetchDataUserId(db, data, userId);
+        if (email) return await fetchDataEmail(db, data, email);
       } else if (authlvl[data].lvl <= 2 && userKey) {
         var result = await key.getKey(db, userKey);
         if (result.success) {
@@ -105,6 +110,10 @@ fetchDataKey = async function (db, data, userKey) {
 };
 fetchDataUserId = async function (db, data, userId) {
   var result = await db.collection("user").find({ userId: userId }).toArray();
+  return { success: true, data: result[0][data] };
+};
+fetchDataEmail = async function (db, data, email) {
+  var result = await db.collection("user").find({ email: email }).toArray();
   return { success: true, data: result[0][data] };
 };
 

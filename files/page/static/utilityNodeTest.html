@@ -17,18 +17,39 @@
       {
         name: "uBoxSmall",
         title: "Test...",
-        left: "15%",
-        top: "15%",
+        left: "15px",
+        top: "15px",
         width: "300px",
         id: "changeNameBox",
+        styles: [["zIndex", 2]],
         nodes: [
-          { name: "uInput", id: "changeNameInput" },
-          { name: "uButtonMain", text: "Save" },
-          { name: "uButtonSecondary", text: "Cancel" },
+          { name: "uInput", id: "changeChatTitleInput" },
+          { name: "uButtonMain", text: "Save", id: "saveChatTitle" },
+          {
+            name: "uButtonSecondary",
+            text: "Cancel",
+            id: "cancelChatSaveTitle",
+          },
         ],
       },
     ]);
     console.log(nodeId);
+
+    var userDisplay = processNodeObj(document.getElementById("nodeTestDiv"), [
+      {
+        name: "uBoxSmall",
+        title: "",
+        left: "50%",
+        top: "40px",
+        nodes: [
+          {
+            name: "uUserDisplay",
+            author: "Halloo",
+            img: "/image/get/default",
+          },
+        ],
+      },
+    ]);
   }
   main();
 </script>

@@ -1,3 +1,15 @@
+@keyframes uBoxPopIn {
+  0% {
+    transform: translateY(-10px) scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+}
+
 .uInput {
   background-color: var(--bgL3);
   border: 0;
@@ -11,6 +23,7 @@
   padding-bottom: 2.5px;
   color: var(--textColor);
   margin-top: 10px;
+  box-sizing: border-box;
 }
 
 .uInput:focus {
@@ -26,6 +39,7 @@
   left: 0;
   box-shadow: 0 0 4px black;
   color: var(--textColor);
+  animation: uBoxPopIn 0.1s;
 }
 
 .uBoxSmall {
@@ -62,4 +76,31 @@
 
 .uButtonMain:hover {
   background-color: var(--accentColorBright);
+}
+
+.uUserDisplay {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  min-width: 200px;
+  background-color: transparent;
+}
+
+.uUserDisplay:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.uUserDisplayImg {
+  vertical-align: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.uUserDisplayText {
+  position: relative;
+  top: -10px;
+  margin-left: 10px;
 }

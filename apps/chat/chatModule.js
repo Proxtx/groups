@@ -19,6 +19,7 @@ class chatModule {
             users: users,
             chatId: chatId,
             time: Date.now(),
+            img: "default",
           });
           return { success: true, chatId: chatId };
         }
@@ -38,6 +39,10 @@ class chatModule {
         chatId: chatId,
       };
       await db.collection("chatMessages").insertOne(data);
+      db.collection("chats").updateOne(
+        { chatId: chatId },
+        { $set: { time: Date.now() } }
+      );
       for (var i in global.socketHandler.subs.chat[chatId]) {
         global.socketHandler.sendMessage("chat", chatId, i, data);
       }
@@ -59,6 +64,72 @@ class chatModule {
         start,
         amount
       );
+    } else {
+      return chatOwn;
+    }
+  };
+
+  getChatInfo = async function (db, Key, chatId) {
+    var chatOwn = await this.chatOwn(db, Key, chatId);
+    if (chatOwn.success) {
+      return {
+        success: true,
+        chat: (
+          await db
+            .collection("chats")
+            .find({ chatId: chatId })
+            .project({ _id: 0, title: 1, users: 1, img: 1, time: 1 })
+            .toArray()
+        )[0],
+      };
+    } else {
+      return chatOwn;
+    }
+  };
+
+  setChatTitle = async function (db, Key, chatId, title) {
+    var chatOwn = await this.chatOwn(db, Key, chatId);
+    if (chatOwn.success) {
+      await db
+        .collection("chats")
+        .updateOne({ chatId: chatId }, { $set: { title: title } });
+      return { success: true };
+    } else {
+      return chatOwn;
+    }
+  };
+
+  leaveGroup = async function (db, Key, chatId, userId) {
+    var chatOwn = await this.chatOwn(db, Key, chatId);
+    if (chatOwn.success) {
+      if (chatOwn.auth.userId == userId) {
+        await db
+          .collection("chats")
+          .updateOne({ chatId: chatId }, { $pull: { users: userId } });
+        return { success: true };
+      } else {
+        return { success: false, error: 2 };
+      }
+    } else {
+      return chatOwn;
+    }
+  };
+
+  addMember = async function (db, Key, chatId, users) {
+    var chatOwn = await this.chatOwn(db, Key, chatId);
+    if (chatOwn.success) {
+      var add = [];
+      for (var i in users) {
+        if (
+          (await db.collection("user").find({ userId: users[i] }).count()) > 0
+        ) {
+          add.push(users[i]);
+        }
+      }
+      await db
+        .collection("chats")
+        .updateOne({ chatId: chatId }, { $push: { users: { $each: add } } });
+      return { success: true };
     } else {
       return chatOwn;
     }

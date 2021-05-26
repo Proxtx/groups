@@ -47,4 +47,55 @@ router.post("/getMessages", async (req, res) => {
     );
 });
 
+router.post("/getChatInfo", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await chatModule.getChatInfo(
+        req.app.locals.db,
+        req.body.key,
+        req.body.chatId
+      )
+    );
+});
+
+router.post("/setChatTitle", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await chatModule.setChatTitle(
+        req.app.locals.db,
+        req.body.key,
+        req.body.chatId,
+        req.body.title
+      )
+    );
+});
+
+router.post("/leaveGroup", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await chatModule.leaveGroup(
+        req.app.locals.db,
+        req.body.key,
+        req.body.chatId,
+        req.body.userId
+      )
+    );
+});
+
+router.post("/addMember", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await chatModule.addMember(
+        req.app.locals.db,
+        req.body.key,
+        req.body.chatId,
+        req.body.users
+      )
+    );
+});
+
 module.exports = router;
