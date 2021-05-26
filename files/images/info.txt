@@ -1,0 +1,1 @@
+This is the image libary. Everyone can access the images stored here.

@@ -1,0 +1,103 @@
+#chatBg {
+  width: 100%;
+  height: calc(100% - 120px);
+  position: absolute;
+  background-color: var(--bgL3);
+  top: 60px;
+  left: 0;
+  overflow-y: scroll;
+  /*7dcb23*/
+}
+#chat {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  height: 100%;
+  width: calc(100% - 30px);
+  max-width: 700px;
+  background-color: transparent;
+}
+.chatBox {
+  float: left;
+  width: 100%;
+  margin: 15px;
+}
+.chatBoxProfilePicture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.chatBoxContent {
+  display: inline-block;
+  background-color: var(--bgL4);
+  color: var(--textColor);
+  padding: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 3px;
+}
+#message {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  max-width: 700px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#messageBackground {
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  bottom: 0;
+  background-color: var(--bgL3);
+}
+#inputMessage {
+  position: absolute;
+  background-color: var(--bgL4);
+  float: center;
+  width: 80%;
+  height: 30px;
+  border: 0;
+  border-radius: 3px;
+  color: var(--textColor);
+  padding: 5px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  resize: none;
+}
+#chatTopBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: var(--bgL3);
+  border-bottom: 2px solid var(--bgL2);
+  overflow: hidden;
+  z-index: 1;
+  color: var(--textColor);
+}
+#chatImage {
+  position: absolute;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 15px;
+}
+#chatTitle {
+  line-height: 60px;
+  display: inline;
+  margin-left: 70px;
+}
+#chatTitleEdit {
+  transform: translateY(7.5px);
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/*#141414*/
