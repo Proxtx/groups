@@ -4,6 +4,6 @@ chatScreen.init("screenChat");
 
 async function main() {
   await loadAllUtilityNodes();
-  chatScreen.loadScreen("/apps/group");
+  chatScreen.loadScreen("/apps/channel");
 }
 main();

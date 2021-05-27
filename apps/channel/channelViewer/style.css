@@ -38,7 +38,7 @@
   cursor: pointer;
 }
 
-#groupViewScreen {
+#channelViewScreen {
   position: absolute;
   width: 100%;
   height: calc(100% - 60px);
@@ -47,14 +47,14 @@
   background-color: var(--bgL3);
 }
 
-#groupSelectApp {
+#channelSelectApp {
   position: absolute;
   height: 100%;
   display: inline;
   margin-left: 20px;
 }
 
-.groupSelectAppTab {
+.channelSelectAppTab {
   position: relative;
   height: 100%;
   display: inline-flex;
@@ -65,7 +65,7 @@
   cursor: pointer;
 }
 
-.groupSelectAppTabBottomLine {
+.channelSelectAppTabBottomLine {
   background-color: var(--accentColor);
   width: 80%;
   height: 4px;

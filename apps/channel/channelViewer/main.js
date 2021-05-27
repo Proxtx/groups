@@ -1,13 +1,13 @@
 var userId;
-var groupId = prompt("ChatID", "c1fe3cydekwh5q8yi");
+var channelId = prompt("ChannelId", "u4tszh7nf7z5sbzao");
 
 var userData = {};
 
 var tabs = [];
 
-var chatScreen = new screen();
+var appScreen = new screen();
 
-chatScreen.init("groupViewScreen");
+appScreen.init("channelViewScreen");
 
 async function main() {
   userId = (
@@ -17,9 +17,9 @@ async function main() {
   ).userId;
 
   var chatInfo = (
-    await Fetch("/apps/group/getGroupInfo", {
+    await Fetch("/apps/channel/getChannelInfo", {
       key: window.localStorage.getItem("key"),
-      groupId: groupId,
+      channelId: channelId,
     })
   ).chat;
 
@@ -59,7 +59,7 @@ function initChangeChatName() {
     processNodeObj(document.body, [
       {
         name: "uBoxSmall",
-        title: "Groupname",
+        title: "Channel Name",
         left: "0px",
         top: "60px",
         width: "350px",
@@ -83,8 +83,8 @@ function initChangeChatName() {
     document
       .getElementById("saveChatTitle")
       .addEventListener("click", async function (ev) {
-        await Fetch("/apps/group/setGroupTitle", {
-          groupId: groupId,
+        await Fetch("/apps/channel/setChannelTitle", {
+          channelId: channelId,
           key: window.localStorage.getItem("key"),
           title: document.getElementById("changeChatTitleInput").value,
         });
@@ -120,20 +120,20 @@ function initShowMembers() {
     nA.push({
       name: "uButtonMain",
       text: "Close",
-      id: "chatMemberClose",
+      id: "groupMemberClose",
       click: closeMembersPopUpBox,
     });
     nA.push({
       name: "uButtonSecondary",
       text: "Add Member",
-      id: "chatMemberAdd",
+      id: "groupMemberAdd",
       click: openAddMember,
     });
     nA.push({
       name: "uButtonSecondary",
       text: "Leave Group",
-      id: "chatMemberLeave",
-      click: leaveGroup,
+      id: "groupMemberLeave",
+      click: leavechannel,
     });
     processNodeObj(document.body, [
       {
@@ -141,7 +141,7 @@ function initShowMembers() {
         title: "",
         left: x + "px",
         top: "60px",
-        id: "chatMemberBox",
+        id: "groupMemberBox",
         styles: [
           ["zIndex", 2],
           ["right", "0px"],
@@ -154,13 +154,13 @@ function initShowMembers() {
 }
 
 function closeMembersPopUpBox() {
-  document.getElementById("chatMemberBox").remove();
+  document.getElementById("groupMemberBox").remove();
   showMembersOpen = false;
 }
 
-async function leaveGroup() {
-  await Fetch("/apps/group/leaveGroup", {
-    groupId: groupId,
+async function leavechannel() {
+  await Fetch("/apps/channel/leaveChannel", {
+    channelId: channelId,
     key: window.localStorage.getItem("key"),
     userId: userId,
   });
@@ -220,8 +220,8 @@ async function addMember() {
     );
   }
 
-  var result = await Fetch("/apps/group/addMember", {
-    groupId: groupId,
+  var result = await Fetch("/apps/channel/addMember", {
+    channelId: channelId,
     key: window.localStorage.getItem("key"),
     users: uid,
   });
@@ -273,7 +273,7 @@ function onMouseUpdate(e) {
 
 var tabs = [
   { name: "Chat", link: "/apps/chat/chatEmbed" },
-  { name: "Group", link: "/apps/group/testTab" },
+  { name: "Test Tab", link: "/apps/channel/testTab" },
 ];
 
 var selectedTab = 0;
@@ -281,7 +281,7 @@ var selectedTab = 0;
 function initTabs() {
   for (var i in tabs) {
     var node = document
-      .getElementsByClassName("groupSelectAppTab")[0]
+      .getElementsByClassName("channelSelectAppTab")[0]
       .cloneNode(true);
     node.children[0].innerHTML = tabs[i].name;
     tabs[i].node = node;
@@ -291,7 +291,7 @@ function initTabs() {
         selectTab(index);
       }.bind(this, i)
     );
-    document.getElementById("groupSelectApp").appendChild(node);
+    document.getElementById("channelSelectApp").appendChild(node);
     deselectTab(i);
   }
   selectTab(selectedTab);
@@ -302,7 +302,7 @@ function selectTab(index) {
   tabs[index].node.style.color = "var(--textColor)";
   tabs[index].node.children[1].style.display = "unset";
   selectedTab = index;
-  chatScreen.loadScreen(tabs[index].link);
+  appScreen.loadScreen(tabs[index].link);
 }
 function deselectTab(index) {
   tabs[index].node.style.color = "var(--secondary)";

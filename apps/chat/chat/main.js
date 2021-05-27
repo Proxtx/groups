@@ -84,7 +84,7 @@ async function main() {
     async function (start, amount) {
       return await Fetch("/apps/chat/getMessages", {
         key: window.localStorage.getItem("key"),
-        groupId: groupId,
+        channelId: channelId,
         start: start,
         amount: amount,
       });
@@ -177,7 +177,7 @@ document
 async function sendMessage() {
   await Fetch("/apps/chat/sendMessage", {
     key: window.localStorage.getItem("key"),
-    groupId: groupId,
+    channelId: channelId,
     text: document.getElementById("inputMessage").value,
   });
   document.getElementById("inputMessage").value = "";
@@ -190,7 +190,7 @@ function startSocketHandler() {
   socketHandlerChat.init();
   socketHandlerChat.subscribe(
     "chat",
-    groupId,
+    channelId,
     window.localStorage.getItem("key")
   );
   socketHandlerChat.onMessage.push(async function (msg) {

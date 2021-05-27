@@ -1,17 +1,17 @@
 const express = require("express");
-var groupModule = require("./groupModule");
-groupModule = new groupModule();
+var channelModule = require("./channelModule");
+channelModule = new channelModule();
 
 const router = express.Router();
 
-global.group.addStatic("", "groupViewer");
-global.group.addStatic("testTab", "testTab");
+global.channel.addStatic("", "channelViewer");
+global.channel.addStatic("testTab", "testTab");
 
-router.post("/initGroup", async (req, res) => {
+router.post("/initChannel", async (req, res) => {
   res
     .status(200)
     .send(
-      await groupModule.initGroup(
+      await channelModule.initChannel(
         req.app.locals.db,
         req.body.users,
         req.body.title,
@@ -20,39 +20,39 @@ router.post("/initGroup", async (req, res) => {
     );
 });
 
-router.post("/getGroupInfo", async (req, res) => {
+router.post("/getChannelInfo", async (req, res) => {
   res
     .status(200)
     .send(
-      await groupModule.getGroupInfo(
+      await channelModule.getChannelInfo(
         req.app.locals.db,
         req.body.key,
-        req.body.groupId
+        req.body.channelId
       )
     );
 });
 
-router.post("/setGroupTitle", async (req, res) => {
+router.post("/setChannelTitle", async (req, res) => {
   res
     .status(200)
     .send(
-      await groupModule.setGroupTitle(
+      await channelModule.setChannelTitle(
         req.app.locals.db,
         req.body.key,
-        req.body.groupId,
+        req.body.channelId,
         req.body.title
       )
     );
 });
 
-router.post("/leaveGroup", async (req, res) => {
+router.post("/leaveChannel", async (req, res) => {
   res
     .status(200)
     .send(
-      await groupModule.leaveGroup(
+      await channelModule.leaveChannel(
         req.app.locals.db,
         req.body.key,
-        req.body.groupId,
+        req.body.channelId,
         req.body.userId
       )
     );
@@ -62,10 +62,10 @@ router.post("/addMember", async (req, res) => {
   res
     .status(200)
     .send(
-      await groupModule.addMember(
+      await channelModule.addMember(
         req.app.locals.db,
         req.body.key,
-        req.body.groupId,
+        req.body.channelId,
         req.body.users
       )
     );

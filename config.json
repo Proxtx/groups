@@ -2,9 +2,5 @@
     "host": 3050,
     "dbUrl": "cluster0.9ool6.mongodb.net",
     "dbUser": "groupsdbaccess",
-    "dbPwd": "2OnHNEzstyJICz3C",
-
-    "chat": {
-        "port": 3000
-    }
+    "dbPwd": "2OnHNEzstyJICz3C"
 }

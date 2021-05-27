@@ -7,19 +7,20 @@ config = new config();
 
 class chatModule {
   chatMessagesListener;
+  lastUpdateTime = 0;
 
-  sendMessage = async function (db, Key, text, groupId) {
-    var chatOwn = await this.chatOwn(db, Key, groupId);
+  sendMessage = async function (db, Key, text, channelId) {
+    var chatOwn = await this.chatOwn(db, Key, channelId);
     if (chatOwn.success) {
       var data = {
         userId: chatOwn.auth.userId,
         time: Date.now(),
         message: { type: "text", text: text },
-        groupId: groupId,
+        channelId: channelId,
       };
       await db.collection("chatMessages").insertOne(data);
-      db.collection("groups").updateOne(
-        { groupId: groupId },
+      db.collection("channels").updateOne(
+        { channelId: channelId },
         { $set: { time: Date.now() } }
       );
       return { success: true };
@@ -28,48 +29,52 @@ class chatModule {
     }
   };
 
-  getMessages = async function (db, Key, groupId, start, amount) {
-    var chatOwn = await this.chatOwn(db, Key, groupId);
+  getMessages = async function (db, Key, channelId, start, amount) {
+    var chatOwn = await this.chatOwn(db, Key, channelId);
     if (chatOwn.success) {
       if (!this.chatMessagesListener) {
-        this.chatMessagesListener = await db.collection("groups").watch();
+        this.chatMessagesListener = await db.collection("channels").watch();
         this.chatMessagesListener.on("change", async (next) => {
-          var groupId = (
+          var channel = (
             await db
-              .collection("groups")
+              .collection("channels")
               .find({ _id: next.documentKey._id })
-              .project({ groupId: 1 })
+              .project({ channelId: 1, time: 1 })
               .toArray()
-          )[0].groupId;
-          for (var i in global.socketHandler.subs.chat[groupId]) {
-            var chatOwn = await this.chatOwn(
-              db,
-              global.socketHandler.subs.chat[groupId][i].cmdChain[3],
-              global.socketHandler.subs.chat[groupId][i].cmdChain[2]
-            );
-            if (chatOwn.success) {
-              global.socketHandler.sendMessage(
-                "chat",
-                groupId,
-                i,
-                (
-                  await db
-                    .collection("chatMessages")
-                    .find({ groupId: groupId })
-                    .sort({ time: -1 })
-                    .toArray()
-                )[0]
+          )[0];
+          if (channel.time != this.lastUpdateTime) {
+            var channelId = channel.channelId;
+            for (var i in global.socketHandler.subs.chat[channelId]) {
+              var chatOwn = await this.chatOwn(
+                db,
+                global.socketHandler.subs.chat[channelId][i].cmdChain[3],
+                global.socketHandler.subs.chat[channelId][i].cmdChain[2]
               );
-            } else {
-              global.socketHandler.subs.chat[groupId].splice(i, 1);
+              if (chatOwn.success) {
+                global.socketHandler.sendMessage(
+                  "chat",
+                  channelId,
+                  i,
+                  (
+                    await db
+                      .collection("chatMessages")
+                      .find({ channelId: channelId })
+                      .sort({ time: -1 })
+                      .toArray()
+                  )[0]
+                );
+              } else {
+                global.socketHandler.subs.chat[channelId].splice(i, 1);
+              }
             }
+            this.lastUpdateTime = channel.time;
           }
         });
       }
       return await scrollview.getScrollviewContent(
         db
           .collection("chatMessages")
-          .find({ groupId: groupId })
+          .find({ channelId: channelId })
           .sort({ time: -1 })
           .project({ time: 1, _id: 0, message: 1, userId: 1 }),
         start,
@@ -80,12 +85,12 @@ class chatModule {
     }
   };
 
-  chatOwn = async function (db, Key, groupId) {
+  chatOwn = async function (db, Key, channelId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       var chat = await db
-        .collection("groups")
-        .find({ groupId: groupId, users: auth.userId });
+        .collection("channels")
+        .find({ channelId: channelId, users: auth.userId });
       if ((await chat.count()) > 0) {
         return { success: true, auth: auth };
       } else {
