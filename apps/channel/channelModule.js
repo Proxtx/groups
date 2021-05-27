@@ -4,28 +4,22 @@ var key = require("../../modules/key");
 key = new key();
 
 class channelModule {
-  initChannel = async function (db, users, title, Key) {
+  initChannel = async function (db, title, Key, groupId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
-      for (var i in users) {
-        if (users[i] == auth.userId) {
-          var channelId = await genString.returnString(
-            db,
-            "chats",
-            {},
-            "channelId"
-          );
-          await db.collection("channels").insertOne({
-            title: title,
-            users: users,
-            channelId: channelId,
-            time: Date.now(),
-            img: "default",
-          });
-          return { success: true, channelId: channelId };
-        }
-      }
-      return { success: false, code: 2 };
+      var channelId = await genString.returnString(
+        db,
+        "channels",
+        {},
+        "channelId"
+      );
+      await db.collection("channels").insertOne({
+        title: title,
+        groupId: groupId,
+        channelId: channelId,
+        time: Date.now(),
+      });
+      return { success: true, channelId: channelId };
     } else {
       return auth;
     }
@@ -33,15 +27,29 @@ class channelModule {
   getChannelInfo = async function (db, Key, channelId) {
     var channelOwn = await this.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
+      var channel = (
+        await db
+          .collection("channels")
+          .find({ channelId: channelId })
+          .project({ _id: 0, title: 1, time: 1, groupId: 1 })
+          .toArray()
+      )[0];
+      var group = (
+        await db
+          .collection("groups")
+          .find({ groupId: channel.groupId })
+          .project({ users: 1, img: 1 })
+          .toArray()
+      )[0];
+      var info = {
+        title: channel.title,
+        time: channel.time,
+        users: group.users,
+        img: group.img,
+      };
       return {
         success: true,
-        chat: (
-          await db
-            .collection("channels")
-            .find({ channelId: channelId })
-            .project({ _id: 0, title: 1, users: 1, img: 1, time: 1 })
-            .toArray()
-        )[0],
+        channel: info,
       };
     } else {
       return channelOwn;
@@ -60,63 +68,24 @@ class channelModule {
     }
   };
 
-  leaveChannel = async function (db, Key, channelId, userId) {
-    var channelOwn = await this.channelOwn(db, Key, channelId);
-    if (channelOwn.success) {
-      if (channelOwn.auth.userId == userId) {
-        await db
-          .collection("channels")
-          .updateOne({ channelId: channelId }, { $pull: { users: userId } });
-        return { success: true };
-      } else {
-        return { success: false, error: 2 };
-      }
-    } else {
-      return channelOwn;
-    }
-  };
-
-  addMember = async function (db, Key, channelId, users) {
-    var channelOwn = await this.channelOwn(db, Key, channelId);
-    if (channelOwn.success) {
-      var add = [];
-      for (var i in users) {
-        if (
-          (await db.collection("user").find({ userId: users[i] }).count()) >
-            0 &&
-          !(
-            (
-              await db
-                .collection("channels")
-                .find({ channelId: channelId, users: users[i] })
-            ).count < 0
-          )
-        ) {
-          add.push(users[i]);
-        } else {
-          return { success: false, error: 6 };
-        }
-      }
-      await db
-        .collection("channels")
-        .updateOne(
-          { channelId: channelId },
-          { $push: { users: { $each: add } } }
-        );
-      return { success: true };
-    } else {
-      return channelOwn;
-    }
-  };
-
   channelOwn = async function (db, Key, channelId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
-      var chat = await db
+      var groupId = await db
         .collection("channels")
-        .find({ channelId: channelId, users: auth.userId });
-      if ((await chat.count()) > 0) {
-        return { success: true, auth: auth };
+        .find({ channelId: channelId })
+        .project({ groupId: 1 })
+        .toArray();
+      if (groupId.length > 0) {
+        groupId = groupId[0].groupId;
+        var group = await db
+          .collection("groups")
+          .find({ groupId: groupId, users: auth.userId });
+        if ((await group.count()) > 0) {
+          return { success: true, auth: auth };
+        } else {
+          return { success: false, error: 6 };
+        }
       } else {
         return { success: false, error: 6 };
       }

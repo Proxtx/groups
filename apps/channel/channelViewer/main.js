@@ -1,5 +1,6 @@
 var userId;
-var channelId = prompt("ChannelId", "u4tszh7nf7z5sbzao");
+var channelId = prompt("ChannelId", "2z65yc8x3gevoyq25");
+var groupId = prompt("GroupId", "xiyoch1qmsmo7lp27");
 
 var userData = {};
 
@@ -16,18 +17,18 @@ async function main() {
     })
   ).userId;
 
-  var chatInfo = (
+  var channelInfo = (
     await Fetch("/apps/channel/getChannelInfo", {
       key: window.localStorage.getItem("key"),
       channelId: channelId,
     })
-  ).chat;
+  ).channel;
 
-  document.getElementById("chatTitleText").innerHTML = chatInfo.title;
-  document.getElementById("chatImage").src = "/image/get/" + chatInfo.img;
+  document.getElementById("chatTitleText").innerHTML = channelInfo.title;
+  document.getElementById("chatImage").src = "/image/get/" + channelInfo.img;
 
-  for (var u in chatInfo.users) {
-    await addMemberDataToList(chatInfo.users[u]);
+  for (var u in channelInfo.users) {
+    await addMemberDataToList(channelInfo.users[u]);
   }
   initTabs();
 }
@@ -133,7 +134,7 @@ function initShowMembers() {
       name: "uButtonSecondary",
       text: "Leave Group",
       id: "groupMemberLeave",
-      click: leavechannel,
+      click: leaveGroup,
     });
     processNodeObj(document.body, [
       {
@@ -158,9 +159,9 @@ function closeMembersPopUpBox() {
   showMembersOpen = false;
 }
 
-async function leavechannel() {
-  await Fetch("/apps/channel/leaveChannel", {
-    channelId: channelId,
+async function leaveGroup() {
+  await Fetch("/apps/group/leaveGroup", {
+    groupId: groupId,
     key: window.localStorage.getItem("key"),
     userId: userId,
   });
@@ -220,8 +221,8 @@ async function addMember() {
     );
   }
 
-  var result = await Fetch("/apps/channel/addMember", {
-    channelId: channelId,
+  var result = await Fetch("/apps/group/addMember", {
+    groupId: groupId,
     key: window.localStorage.getItem("key"),
     users: uid,
   });

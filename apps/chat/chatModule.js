@@ -4,16 +4,18 @@ var scrollview = require("../../modules/scrollview");
 scrollview = new scrollview();
 var config = require("../../modules/config");
 config = new config();
+var channelModule = require("../channel/channelModule");
+channelModule = new channelModule();
 
 class chatModule {
   chatMessagesListener;
   lastUpdateTime = 0;
 
   sendMessage = async function (db, Key, text, channelId) {
-    var chatOwn = await this.chatOwn(db, Key, channelId);
-    if (chatOwn.success) {
+    var channelOwn = await channelModule.channelOwn(db, Key, channelId);
+    if (channelOwn.success) {
       var data = {
-        userId: chatOwn.auth.userId,
+        userId: channelOwn.auth.userId,
         time: Date.now(),
         message: { type: "text", text: text },
         channelId: channelId,
@@ -25,13 +27,13 @@ class chatModule {
       );
       return { success: true };
     } else {
-      return chatOwn;
+      return channelOwn;
     }
   };
 
   getMessages = async function (db, Key, channelId, start, amount) {
-    var chatOwn = await this.chatOwn(db, Key, channelId);
-    if (chatOwn.success) {
+    var channelOwn = await channelModule.channelOwn(db, Key, channelId);
+    if (channelOwn.success) {
       if (!this.chatMessagesListener) {
         this.chatMessagesListener = await db.collection("channels").watch();
         this.chatMessagesListener.on("change", async (next) => {
@@ -45,12 +47,12 @@ class chatModule {
           if (channel.time != this.lastUpdateTime) {
             var channelId = channel.channelId;
             for (var i in global.socketHandler.subs.chat[channelId]) {
-              var chatOwn = await this.chatOwn(
+              var channelOwn = await channelModule.channelOwn(
                 db,
                 global.socketHandler.subs.chat[channelId][i].cmdChain[3],
                 global.socketHandler.subs.chat[channelId][i].cmdChain[2]
               );
-              if (chatOwn.success) {
+              if (channelOwn.success) {
                 global.socketHandler.sendMessage(
                   "chat",
                   channelId,
@@ -81,23 +83,7 @@ class chatModule {
         amount
       );
     } else {
-      return chatOwn;
-    }
-  };
-
-  chatOwn = async function (db, Key, channelId) {
-    var auth = await key.getKey(db, Key);
-    if (auth.success) {
-      var chat = await db
-        .collection("channels")
-        .find({ channelId: channelId, users: auth.userId });
-      if ((await chat.count()) > 0) {
-        return { success: true, auth: auth };
-      } else {
-        return { success: false, error: 6 };
-      }
-    } else {
-      return auth;
+      return channelOwn;
     }
   };
 }

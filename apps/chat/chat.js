@@ -4,7 +4,6 @@ chatModule = new chatModule();
 
 const router = express.Router();
 
-global.chat.addStatic("", "public");
 global.chat.addStatic("chatEmbed", "chat");
 
 router.post("/sendMessage", async (req, res) => {
