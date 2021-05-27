@@ -1,9 +1,5 @@
-var userId;
-var chatId = "c1fe3cydekwh5q8yi";
-
-var userData = {};
-
 var scv = new scrollview();
+var leftUserData = {};
 
 function genChatBox(
   image,
@@ -63,15 +59,15 @@ function genChatBox(
   return boxClone;
 }
 
-async function addMemberDataToList(userId) {
-  userData[userId] = {};
-  userData[userId].author = (
+async function addMissingChatMember(userId) {
+  leftUserData[userId] = {};
+  leftUserData[userId].author = (
     await Fetch("/profile/data", {
       userId: userId,
       data: "username",
     })
   ).data;
-  userData[userId].img =
+  leftUserData[userId].img =
     "/image/get/" +
     (
       await Fetch("/profile/data", {
@@ -82,33 +78,13 @@ async function addMemberDataToList(userId) {
 }
 
 async function main() {
-  userId = (
-    await Fetch("/auth/key", {
-      key: window.localStorage.getItem("key"),
-    })
-  ).userId;
-
-  var chatInfo = (
-    await Fetch("/apps/chat/getChatInfo", {
-      key: window.localStorage.getItem("key"),
-      chatId: chatId,
-    })
-  ).chat;
-
-  document.getElementById("chatTitleText").innerHTML = chatInfo.title;
-  document.getElementById("chatImage").src = "/image/get/" + chatInfo.img;
-
-  for (var u in chatInfo.users) {
-    await addMemberDataToList(chatInfo.users[u]);
-  }
-
   scv.amount = 10;
   scv.initScrollview(
     document.getElementById("chatBg"),
     async function (start, amount) {
       return await Fetch("/apps/chat/getMessages", {
         key: window.localStorage.getItem("key"),
-        chatId: chatId,
+        groupId: groupId,
         start: start,
         amount: amount,
       });
@@ -144,11 +120,17 @@ async function makeChatBox(msg, appendTop = true) {
     showAuthor = false;
   }
   if (showProfilePicture && showAuthor) {
-    if (!userData[msg.userId]) {
-      await addMemberDataToList(msg.userId);
+    console.log(userData[msg.userId]);
+    if (!userData[msg.userId] && !leftUserData[msg.userId]) {
+      await addMissingChatMember(msg.userId);
     }
-    author = userData[msg.userId].author;
-    image = userData[msg.userId].img;
+    if (userData[msg.userId]) {
+      author = userData[msg.userId].author;
+      image = userData[msg.userId].img;
+    } else if (leftUserData[msg.userId]) {
+      author = leftUserData[msg.userId].author;
+      image = leftUserData[msg.userId].img;
+    }
   }
   genChatBox(
     image,
@@ -195,7 +177,7 @@ document
 async function sendMessage() {
   await Fetch("/apps/chat/sendMessage", {
     key: window.localStorage.getItem("key"),
-    chatId: chatId,
+    groupId: groupId,
     text: document.getElementById("inputMessage").value,
   });
   document.getElementById("inputMessage").value = "";
@@ -203,208 +185,20 @@ async function sendMessage() {
 
 main();
 
-var changeNameOpen = false;
-
-function initChangeChatName() {
-  if (!changeNameOpen) {
-    changeNameOpen = true;
-    processNodeObj(document.body, [
-      {
-        name: "uBoxSmall",
-        title: "Groupname",
-        left: x + "px",
-        top: y + "px",
-        width: "350px",
-        id: "changeNameBox",
-        styles: [["zIndex", 2]],
-        nodes: [
-          {
-            name: "uInput",
-            id: "changeChatTitleInput",
-            value: document.getElementById("chatTitleText").innerHTML,
-          },
-          { name: "uButtonMain", text: "Save", id: "saveChatTitle" },
-          {
-            name: "uButtonSecondary",
-            text: "Cancel",
-            id: "cancelSaveChatTitle",
-          },
-        ],
-      },
-    ]);
-    document
-      .getElementById("saveChatTitle")
-      .addEventListener("click", async function (ev) {
-        await Fetch("/apps/chat/setChatTitle", {
-          chatId: chatId,
-          key: window.localStorage.getItem("key"),
-          title: document.getElementById("changeChatTitleInput").value,
-        });
-        document.getElementById("chatTitleText").innerHTML =
-          document.getElementById("changeChatTitleInput").value;
-        closeRenamePopUpBox();
-      });
-  }
-  document
-    .getElementById("cancelSaveChatTitle")
-    .addEventListener("click", closeRenamePopUpBox);
-}
-
-function closeRenamePopUpBox() {
-  document.getElementById("changeNameBox").remove();
-  changeNameOpen = false;
-}
-
-var showMembersOpen = false;
-
-function initShowMembers() {
-  if (!showMembersOpen) {
-    showMembersOpen = true;
-    var nA = [];
-    for (var i in userData) {
-      nA.push({
-        name: "uUserDisplay",
-        author: userData[i].author,
-        img: userData[i].img,
-      });
-    }
-
-    nA.push({
-      name: "uButtonMain",
-      text: "Close",
-      id: "chatMemberClose",
-      click: closeMembersPopUpBox,
-    });
-    nA.push({
-      name: "uButtonSecondary",
-      text: "Add Member",
-      id: "chatMemberAdd",
-      click: openAddMember,
-    });
-    nA.push({
-      name: "uButtonSecondary",
-      text: "Leave Group",
-      id: "chatMemberLeave",
-      click: leaveGroup,
-    });
-    processNodeObj(document.body, [
-      {
-        name: "uBoxSmall",
-        title: "",
-        left: x + "px",
-        top: "60px",
-        id: "chatMemberBox",
-        styles: [
-          ["zIndex", 2],
-          ["right", "0px"],
-          ["left", "unset"],
-        ],
-        nodes: nA,
-      },
-    ]);
-  }
-}
-
-function closeMembersPopUpBox() {
-  document.getElementById("chatMemberBox").remove();
-  showMembersOpen = false;
-}
-
-async function leaveGroup() {
-  await Fetch("/apps/chat/leaveGroup", {
-    chatId: chatId,
-    key: window.localStorage.getItem("key"),
-    userId: userId,
-  });
-  closeMembersPopUpBox();
-}
-
-var addMemberOpen = false;
-
-async function openAddMember() {
-  if (!addMemberOpen) {
-    addMemberOpen = true;
-    processNodeObj(document.body, [
-      {
-        name: "uBoxSmall",
-        title: "Add Member",
-        left: x + "px",
-        top: "60px",
-        id: "memberAddBox",
-        styles: [
-          ["zIndex", 3],
-          ["right", "0px"],
-          ["left", "unset"],
-        ],
-        nodes: [
-          {
-            name: "uInput",
-            placeholder: "Email use ';' to add multiple",
-            id: "addMemberInput",
-          },
-          {
-            name: "uButtonMain",
-            text: "Add",
-            click: addMember,
-          },
-          {
-            name: "uButtonSecondary",
-            text: "Cancel",
-            click: closeAddMemberBox,
-          },
-        ],
-      },
-    ]);
-  }
-}
-
-async function addMember() {
-  var users = document.getElementById("addMemberInput").value.split(";");
-  var uid = [];
-  for (var i in users) {
-    uid.push(
-      (
-        await Fetch("/profile/data", {
-          email: users[i],
-          data: "userId",
-        })
-      ).data
-    );
-  }
-
-  console.log(uid);
-
-  await Fetch("/apps/chat/addMember", {
-    chatId: chatId,
-    key: window.localStorage.getItem("key"),
-    users: uid,
-  });
-  closeAddMemberBox();
-}
-
-function closeAddMemberBox() {
-  document.getElementById("memberAddBox").remove();
-  addMemberOpen = false;
-}
-
 var socketHandlerChat = new socketHandler();
-
-socketHandlerChat.init();
-socketHandlerChat.subscribe("chat", chatId, window.localStorage.getItem("key"));
-socketHandlerChat.onMessage.push(async function (msg) {
-  await makeChatBox(msg, false);
-  document
-    .getElementById("chatBg")
-    .scrollTo(0, document.getElementById("chatBg").scrollHeight);
-});
-
-var x = null;
-var y = null;
-
-document.addEventListener("mousemove", onMouseUpdate, false);
-document.addEventListener("mouseenter", onMouseUpdate, false);
-
-function onMouseUpdate(e) {
-  x = e.pageX;
-  y = e.pageY;
+function startSocketHandler() {
+  socketHandlerChat.init();
+  socketHandlerChat.subscribe(
+    "chat",
+    groupId,
+    window.localStorage.getItem("key")
+  );
+  socketHandlerChat.onMessage.push(async function (msg) {
+    await makeChatBox(msg, false);
+    document
+      .getElementById("chatBg")
+      .scrollTo(0, document.getElementById("chatBg").scrollHeight);
+  });
 }
+
+startSocketHandler();

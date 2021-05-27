@@ -1,0 +1,74 @@
+#chatTopBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: var(--bgL3);
+  border-bottom: 2px solid var(--bgL2);
+  overflow: hidden;
+  z-index: 1;
+  color: var(--textColor);
+}
+#chatImage {
+  position: absolute;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 15px;
+}
+#chatTitle {
+  line-height: 60px;
+  display: inline;
+  margin-left: 70px;
+}
+#chatTitleEdit {
+  transform: translateY(7.5px);
+  margin-left: 10px;
+  cursor: pointer;
+}
+#groupIcon {
+  float: right;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+#groupViewScreen {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 60px);
+  top: 60px;
+  left: 0;
+  background-color: var(--bgL3);
+}
+
+#groupSelectApp {
+  position: absolute;
+  height: 100%;
+  display: inline;
+  margin-left: 20px;
+}
+
+.groupSelectAppTab {
+  position: relative;
+  height: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+.groupSelectAppTabBottomLine {
+  background-color: var(--accentColor);
+  width: 80%;
+  height: 4px;
+  position: absolute;
+  bottom: 0;
+}

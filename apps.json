@@ -1,3 +1,4 @@
 {
-    "chat": "chat.js"
+    "chat": "chat.js",
+    "group": "group.js"
 }

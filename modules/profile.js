@@ -110,11 +110,19 @@ fetchDataKey = async function (db, data, userKey) {
 };
 fetchDataUserId = async function (db, data, userId) {
   var result = await db.collection("user").find({ userId: userId }).toArray();
-  return { success: true, data: result[0][data] };
+  if (result.length > 0) {
+    return { success: true, data: result[0][data] };
+  } else {
+    return { success: false, error: 6 };
+  }
 };
 fetchDataEmail = async function (db, data, email) {
   var result = await db.collection("user").find({ email: email }).toArray();
-  return { success: true, data: result[0][data] };
+  if (result.length > 0) {
+    return { success: true, data: result[0][data] };
+  } else {
+    return { success: false, error: 6 };
+  }
 };
 
 module.exports = profile;

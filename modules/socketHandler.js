@@ -31,7 +31,7 @@ class socketHandler {
       this.subs[cmdChain[1]][cmdChain[2]] = [];
     }
     this.subs[cmdChain[1]][cmdChain[2]].push({
-      arguments: cmdChain,
+      cmdChain: cmdChain,
       socket: socket,
     });
   };

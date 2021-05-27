@@ -37,7 +37,7 @@ app.use("/settings", settings);
 async function main() {
   console.log("Loading config...");
   config = await config.getConfig();
-  console.log("Connectiong to Database...");
+  console.log("Connecting to Database...");
   MongoClient.connect(
     "mongodb+srv://" + config.dbUser + ":" + config.dbPwd + "@" + config.dbUrl,
     { useNewUrlParser: true, useUnifiedTopology: true },
