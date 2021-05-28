@@ -21,7 +21,7 @@
 ```json
 {
   "path": "default/x.jpg",
-  "imageId": "default",
-  "imageTypeId": "default"
+  "fileId": "default",
+  "fileTypeId": "default"
 }
 ```

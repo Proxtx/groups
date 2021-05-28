@@ -13,14 +13,13 @@ const io = new Server(server);
 app.use("/app", express.static("files/page/app"));
 app.use("/page", express.static("files/page/page"));
 app.use("/admin", express.static("files/page/admin"));
-app.use("/images", express.static("files/images"));
 app.use("/static", express.static("files/page/static"));
 app.use(express.json());
 
 const auth = require("./router/auth");
 const profile = require("./router/profile");
 const verify = require("./router/verify");
-const image = require("./router/image");
+const file = require("./router/file");
 const settings = require("./router/settings");
 
 var apps = require("./modules/apps");
@@ -31,7 +30,7 @@ socketHandler = new socketHandler();
 app.use("/auth", auth);
 app.use("/profile", profile);
 app.use("/verify", verify);
-app.use("/image", image);
+app.use("/file", file);
 app.use("/settings", settings);
 
 async function main() {

@@ -25,7 +25,7 @@ async function main() {
   ).channel;
 
   document.getElementById("chatTitleText").innerHTML = channelInfo.title;
-  document.getElementById("chatImage").src = "/image/get/" + channelInfo.img;
+  document.getElementById("chatImage").src = "/file/get/" + channelInfo.img;
 
   for (var u in channelInfo.users) {
     await addMemberDataToList(channelInfo.users[u]);
@@ -43,7 +43,7 @@ async function addMemberDataToList(userId) {
     })
   ).data;
   userData[userId].img =
-    "/image/get/" +
+    "/file/get/" +
     (
       await Fetch("/profile/data", {
         userId: userId,

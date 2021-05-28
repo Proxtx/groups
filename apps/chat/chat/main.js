@@ -68,7 +68,7 @@ async function addMissingChatMember(userId) {
     })
   ).data;
   leftUserData[userId].img =
-    "/image/get/" +
+    "/file/get/" +
     (
       await Fetch("/profile/data", {
         userId: userId,
@@ -102,7 +102,7 @@ async function main() {
 }
 
 async function makeChatBox(msg, appendTop = true) {
-  var image = "/image/get/default";
+  var image = "/file/get/default";
   var author = "You are not supposed to see this!";
   var text = msg.message.text;
   var showAuthor = true;

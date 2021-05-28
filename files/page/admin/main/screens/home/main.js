@@ -20,7 +20,7 @@ async function main() {
       })
     ).data;
     document.getElementById("profileImage").src =
-      "/image/get/" +
+      "/file/get/" +
       (
         await Fetch("/profile/data", {
           key: window.localStorage.getItem("key"),

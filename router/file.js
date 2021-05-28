@@ -11,22 +11,22 @@ router.use(
   })
 );
 
-var image = require("../modules/image");
+var file = require("../modules/file");
 
-image = new image();
+file = new file();
 
 router.post("/upload/:key", async (req, res) => {
   var web = req.files.web;
   res
     .status(200)
-    .send(await image.saveImage(req.app.locals.db, web, req.params.key));
+    .send(await file.saveFile(req.app.locals.db, web, req.params.key));
 });
 
 router.get("/get/:id", async (req, res) => {
   var p = path.resolve(
     __dirname +
       "/../" +
-      (await image.getImage(req.app.locals.db, req.params.id)).path
+      (await file.getFile(req.app.locals.db, req.params.id)).path
   );
 
   await fs.stat(p, async (e) => {
@@ -35,7 +35,7 @@ router.get("/get/:id", async (req, res) => {
         path.resolve(
           __dirname +
             "/../" +
-            (await image.getImage(req.app.locals.db, "default")).path
+            (await file.getFile(req.app.locals.db, "default")).path
         )
       );
     } else {

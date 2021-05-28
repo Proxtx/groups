@@ -1,13 +1,13 @@
 var key = require("./key");
 var key = new key();
-var image = require("./image");
-image = new image();
+var file = require("./file");
+file = new file();
 
 class settings {
   changeProfilePicture = async function (db, Key) {
     var auth = await key.getKey(db, Key);
     if (key.getKey) {
-      var upload = await image.createUploadPerm(
+      var upload = await file.createUploadPerm(
         db,
         "user/" + auth.userId,
         "profilePicture",
@@ -17,7 +17,7 @@ class settings {
         .collection("user")
         .updateOne(
           { userId: auth.userId },
-          { $set: { profileImage: upload.imageId } }
+          { $set: { profileImage: upload.fileId } }
         );
       return { success: true, permKey: upload.permKey };
     } else {
