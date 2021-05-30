@@ -6,6 +6,12 @@ var nodeClassNames = [
   "uButtonMain",
   "uButtonSecondary",
   "uUserDisplay",
+  "uScreenFull",
+  "uAreaBorderTopBottom",
+  "uAreaBorderBottom",
+  "uTextBackgroundInline",
+  "uImage",
+  "uHTML",
 ];
 
 var processNodeFunctions = {
@@ -21,6 +27,18 @@ var processNodeFunctions = {
     node.style.top = obj.top;
     node.style.width = obj.width;
     node.style.height = obj.height;
+    return processNodeObj(node, obj.nodes);
+  },
+  uScreenFull: function (node, obj) {
+    return this.uScreen(node, obj);
+  },
+  uAreaBorderTopBottom: function (node, obj) {
+    return this.uScreen(node, obj);
+  },
+  uAreaBorderBottom: function (node, obj) {
+    return this.uScreen(node, obj);
+  },
+  uScreen: function (node, obj) {
     return processNodeObj(node, obj.nodes);
   },
   uButtonSecondary: function (node, obj) {
@@ -46,6 +64,25 @@ var processNodeFunctions = {
   uUserDisplay: function (node, obj) {
     node.children[0].src = obj.img;
     node.children[1].innerHTML = obj.author;
+  },
+  uTextBackgroundInline: function (node, obj) {
+    if (obj.strong) {
+      node.innerHTML = "<strong>" + obj.text + "</strong>";
+    } else {
+      node.innerHTML = obj.text;
+    }
+  },
+  uImage: function (node, obj) {
+    node.src = obj.src;
+    if (obj.width) {
+      node.style.width = obj.width;
+    }
+    if (obj.height) {
+      node.style.height = obj.height;
+    }
+  },
+  uHTML: function (node, obj) {
+    node.innerHTML = obj.html;
   },
 };
 

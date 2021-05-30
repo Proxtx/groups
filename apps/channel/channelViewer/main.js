@@ -4,8 +4,6 @@ var groupId = prompt("GroupId", "xiyoch1qmsmo7lp27");
 
 var userData = {};
 
-var tabs = [];
-
 var appScreen = new screen();
 
 appScreen.init("channelViewScreen");
@@ -274,7 +272,7 @@ function onMouseUpdate(e) {
 
 var tabs = [
   { name: "Chat", link: "/apps/chat/chatEmbed" },
-  { name: "Test Tab", link: "/apps/channel/testTab" },
+  { name: "Files", link: "/apps/file/" },
 ];
 
 var selectedTab = 0;

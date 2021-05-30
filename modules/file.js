@@ -1,31 +1,20 @@
 var fs = require("fs");
+var genString = require("./genString");
+genString = new genString();
 
 const path = "files/files/";
 const defaultFile = "default";
 
 class file {
   createUploadPerm = async function (db, path, name, fileTypeId) {
-    var success = false;
-    var fileId = "";
-    while (!success) {
-      fileId = this.genKeyString(15);
-      var result = await db.collection("files").find({ fileId: fileId });
-      if ((await result.count()) < 1) {
-        success = true;
-      }
-    }
+    var fileId = await genString.returnString(db, "files", {}, fileId);
 
-    success = false;
-    var permKey = "";
-    while (!success) {
-      permKey = this.genKeyString(10);
-      var result = await db
-        .collection("fileUploadAccess")
-        .find({ permKey: permKey });
-      if ((await result.count()) < 1) {
-        success = true;
-      }
-    }
+    var permKey = await genString.returnString(
+      db,
+      "fileUploadAccess",
+      {},
+      permKey
+    );
     await db.collection("fileUploadAccess").insertOne({
       path: path,
       name: name,

@@ -8,6 +8,7 @@
 5. 4 = Missing data
 6. 5 = Already existing
 7. 6 = Not found
+8. 7 = Internal Server Error
 
 # Verify codes
 

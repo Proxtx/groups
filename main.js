@@ -15,6 +15,14 @@ app.use("/page", express.static("files/page/page"));
 app.use("/admin", express.static("files/page/admin"));
 app.use("/static", express.static("files/page/static"));
 app.use(express.json());
+app.use(function (err, req, res, next) {
+  console.error("Error");
+  res.status(200).send({ success: false, error: 7 });
+});
+
+/*process.on("unhandledRejection", function (reason, p) {
+  console.log("Unhandled Rejection:", reason.stack);
+});*/
 
 const auth = require("./router/auth");
 const profile = require("./router/profile");
