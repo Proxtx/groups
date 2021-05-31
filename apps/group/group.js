@@ -5,6 +5,7 @@ groupModule = new groupModule();
 const router = express.Router();
 
 global.group.addStatic("", "groupTestScreen");
+global.group.addStatic("groupEmbed", "groupViewer");
 
 router.post("/initGroup", async (req, res) => {
   res
@@ -41,6 +42,31 @@ router.post("/addMember", async (req, res) => {
         req.body.key,
         req.body.groupId,
         req.body.users
+      )
+    );
+});
+
+router.post("/info", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.groupInfo(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId
+      )
+    );
+});
+
+router.post("/addChannel", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.addChannel(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId,
+        req.body.title
       )
     );
 });

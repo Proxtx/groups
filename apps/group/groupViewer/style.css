@@ -1,0 +1,47 @@
+#groupViewScreen {
+  position: absolute;
+  left: 30%;
+  height: 100%;
+  width: 70%;
+  top: 0;
+  background-color: var(--bgL3);
+}
+#groupOverview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 30%;
+  background-color: var(--bgL2);
+  box-shadow: inset black -2px 0px 20px 0px;
+  color: white;
+}
+#groupImage {
+  width: 30%;
+  margin-top: 20px;
+  border-radius: 5px;
+  margin-left: 15px;
+}
+#groupTitle {
+  margin-left: 15px;
+  margin-top: 15px;
+}
+#channelList {
+  margin-top: 20px;
+  margin-left: 0;
+  width: 100%;
+}
+.channelListEntry {
+  width: 100%;
+  padding: 2px;
+  padding-left: 15px;
+  cursor: pointer;
+}
+.channelListEntry:hover {
+  background-color: var(--hover) !important;
+}
+#groupOptions {
+  position: relative;
+  top: 5px;
+  cursor: pointer;
+}

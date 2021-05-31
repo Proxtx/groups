@@ -25,6 +25,10 @@ class chatModule {
         { channelId: channelId },
         { $set: { time: Date.now() } }
       );
+      db.collection("groups").updateOne(
+        { groupId: channelOwn.groupId },
+        { $set: { time: Date.now() } }
+      );
       return { success: true };
     } else {
       return channelOwn;

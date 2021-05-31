@@ -80,7 +80,7 @@ class channelModule {
         groupId = groupId[0].groupId;
         var group = await db
           .collection("groups")
-          .find({ groupId: groupId, users: auth.userId });
+          .find({ groupId: groupId, users: auth.userId, groupId: groupId });
         if ((await group.count()) > 0) {
           return { success: true, auth: auth };
         } else {

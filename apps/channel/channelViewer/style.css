@@ -12,7 +12,7 @@
 }
 #chatImage {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 5px;
   width: 40px;
   height: 40px;
   top: 50%;

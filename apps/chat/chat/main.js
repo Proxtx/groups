@@ -120,7 +120,6 @@ async function makeChatBox(msg, appendTop = true) {
     showAuthor = false;
   }
   if (showProfilePicture && showAuthor) {
-    console.log(userData[msg.userId]);
     if (!userData[msg.userId] && !leftUserData[msg.userId]) {
       await addMissingChatMember(msg.userId);
     }

@@ -83,6 +83,59 @@ class groupModule {
     }
   };
 
+  groupInfo = async function (db, Key, groupId) {
+    var groupOwn = await this.groupOwn(db, Key, groupId);
+    if (groupOwn.success) {
+      var info = {};
+      var group = (
+        await db
+          .collection("groups")
+          .find({ groupId: groupId })
+          .project({ title: 1, channels: 1, img: 1 })
+          .toArray()
+      )[0];
+      info.img = group.img;
+      info.title = group.title;
+      info.channels = [];
+      for (var i in group.channels) {
+        info.channels.push({
+          channelId: group.channels[i],
+          title: (
+            await db
+              .collection("channels")
+              .find({ channelId: group.channels[i] })
+              .project({ title: 1 })
+              .toArray()
+          )[0].title,
+        });
+      }
+      return {
+        success: true,
+        group: info,
+      };
+    } else {
+      return groupOwn;
+    }
+  };
+
+  addChannel = async function (db, Key, groupId, title) {
+    var groupOwn = await this.groupOwn(db, Key, groupId);
+    if (groupOwn.success) {
+      var channel = await channelModule.initChannel(db, title, Key, groupId);
+      var channelId = channel.channelId;
+      if (channel.success) {
+        await db
+          .collection("groups")
+          .updateOne({ groupId: groupId }, { $push: { channels: channelId } });
+        return { success: true };
+      } else {
+        return channel;
+      }
+    } else {
+      return groupOwn;
+    }
+  };
+
   groupOwn = async function (db, Key, groupId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {

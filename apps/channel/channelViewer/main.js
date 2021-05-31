@@ -1,6 +1,4 @@
 var userId;
-var channelId = prompt("ChannelId", "2z65yc8x3gevoyq25");
-var groupId = prompt("GroupId", "xiyoch1qmsmo7lp27");
 
 var userData = {};
 
@@ -8,7 +6,7 @@ var appScreen = new screen();
 
 appScreen.init("channelViewScreen");
 
-async function main() {
+async function initChannel() {
   userId = (
     await Fetch("/auth/key", {
       key: window.localStorage.getItem("key"),
@@ -30,7 +28,8 @@ async function main() {
   }
   initTabs();
 }
-main();
+
+initChannel();
 
 async function addMemberDataToList(userId) {
   userData[userId] = {};

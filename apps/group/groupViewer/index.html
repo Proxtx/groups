@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="$PATH/style.css" />
+
+<div class="hidden">
+  <div class="channelListEntry">Channel</div>
+</div>
+
+<div id="groupOverview">
+  <img src="/file/get/default" id="groupImage" />
+  <h3 id="groupTitle">
+    <strong>Group</strong
+    ><svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 0 24 24"
+      width="24px"
+      fill="#000000"
+      id="groupOptions"
+      onclick="showGroupOptions()"
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path
+        stroke="white"
+        d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+      />
+    </svg>
+  </h3>
+  <div id="channelList"></div>
+</div>
+<div id="groupViewScreen"></div>
+
+<script src="$PATH/main.js"></script>

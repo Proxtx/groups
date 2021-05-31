@@ -4,6 +4,6 @@ chatScreen.init("testScreenGroup");
 
 async function main() {
   await loadAllUtilityNodes();
-  chatScreen.loadScreen("/apps/channel");
+  chatScreen.loadScreen("/apps/group/groupEmbed");
 }
 main();
