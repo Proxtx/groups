@@ -185,6 +185,10 @@ async function sendMessage() {
 
 main();
 
+if (socketHandlerChat) {
+  socketHandlerChat.enabled = false;
+}
+
 var socketHandlerChat = new socketHandler();
 function startSocketHandler() {
   socketHandlerChat.init();

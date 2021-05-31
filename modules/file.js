@@ -76,15 +76,26 @@ class file {
     }
   };
 
-  deleteFile = async function (db, fileTypeId) {
-    var result = await db
-      .collection("files")
-      .find({ fileTypeId: fileTypeId })
-      .toArray();
+  deleteFile = async function (db, fileTypeId, isFileId = false) {
+    var result;
+    if (isFileId) {
+      result = await db
+        .collection("files")
+        .find({ fileId: fileTypeId })
+        .toArray();
+    } else {
+      result = await db
+        .collection("files")
+        .find({ fileTypeId: fileTypeId })
+        .toArray();
+    }
     if (result.length > 0) {
       try {
-        await fs.unlink(result.path);
-        await db.collection("files").deleteMany({ fileTypeId: fileTypeId });
+        result = result[0];
+        await fs.unlinkSync(path + result.path);
+        await db
+          .collection("files")
+          .deleteMany({ fileTypeId: result.fileTypeId });
         return { success: true };
       } catch (e) {
         return { success: false, error: 6 };

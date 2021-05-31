@@ -13,7 +13,33 @@ router.post("/upload", async (req, res) => {
       await fileModule.uploadFile(
         req.app.locals.db,
         req.body.key,
+        req.body.channelId,
+        req.body.fileName
+      )
+    );
+});
+
+router.post("/list", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await fileModule.listFiles(
+        req.app.locals.db,
+        req.body.key,
         req.body.channelId
+      )
+    );
+});
+
+router.post("/delete", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await fileModule.deleteFile(
+        req.app.locals.db,
+        req.body.key,
+        req.body.channelId,
+        req.body.fileId
       )
     );
 });

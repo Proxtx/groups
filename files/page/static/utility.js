@@ -23,10 +23,10 @@ var processNodeFunctions = {
   },
   uBox: function (node, obj) {
     node.children[0].innerHTML = obj.title;
-    node.style.left = obj.left;
-    node.style.top = obj.top;
-    node.style.width = obj.width;
-    node.style.height = obj.height;
+    if (obj.left) node.style.left = obj.left;
+    if (obj.top) node.style.top = obj.top;
+    if (obj.width) node.style.width = obj.width;
+    if (obj.height) node.style.height = obj.height;
     return processNodeObj(node, obj.nodes);
   },
   uScreenFull: function (node, obj) {

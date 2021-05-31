@@ -3,3 +3,7 @@
   position: relative;
   left: 10%;
 }
+
+.hoverUnderline:hover {
+  text-decoration: underline;
+}

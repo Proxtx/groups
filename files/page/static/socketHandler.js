@@ -6,6 +6,8 @@ class socketHandler {
 
   onMessage = [];
 
+  enabled = true;
+
   subscribe = function (service) {
     var argsString = "";
     for (var i = 1; i < arguments.length; i++) {
@@ -16,6 +18,7 @@ class socketHandler {
     this.socket.on(
       "message",
       function (msg) {
+        if (!this.this.enabled) return;
         for (var i in this.this.onMessage) {
           var f = this.this.onMessage[i].bind(this.this);
           f(msg);
