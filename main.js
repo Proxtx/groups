@@ -1,7 +1,6 @@
 const express = require("express");
 var config = require("./modules/config");
 var MongoClient = require("mongodb").MongoClient;
-config = new config();
 
 const app = express();
 
@@ -31,9 +30,7 @@ const file = require("./router/file");
 const settings = require("./router/settings");
 
 var apps = require("./modules/apps");
-apps = new apps();
 var socketHandler = require("./modules/socketHandler");
-socketHandler = new socketHandler();
 
 app.use("/auth", auth);
 app.use("/profile", profile);

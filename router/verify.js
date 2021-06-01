@@ -4,8 +4,6 @@ const router = express.Router();
 
 var verify = require("../modules/verify");
 
-verify = new verify();
-
 router.post("/genEmail", async (req, res) => {
   res.status(200).send(await verify.genEmail(req.app.locals.db, req.body.key));
 });

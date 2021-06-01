@@ -1,12 +1,11 @@
 var fs = require("fs");
 var genString = require("./genString");
-genString = new genString();
 
 const path = "files/files/";
 const defaultFile = "default";
 
-class file {
-  createUploadPerm = async function (db, path, name, fileTypeId) {
+var file = {
+  createUploadPerm: async function (db, path, name, fileTypeId) {
     var fileId = await genString.returnString(db, "files", {}, fileId);
 
     var permKey = await genString.returnString(
@@ -25,9 +24,9 @@ class file {
     });
 
     return { success: true, permKey: permKey, fileId: fileId };
-  };
+  },
 
-  saveFile = async function (db, file, permKey) {
+  saveFile: async function (db, file, permKey) {
     await this.deleteOldPerms(db);
     var data = await db
       .collection("fileUploadAccess")
@@ -56,9 +55,9 @@ class file {
     } else {
       return { success: false, code: 6 };
     }
-  };
+  },
 
-  getFile = async function (db, fileId) {
+  getFile: async function (db, fileId) {
     var result = await db
       .collection("files")
       .find({ fileId: fileId })
@@ -74,9 +73,9 @@ class file {
       }
       return await this.getFile(db, defaultFile);
     }
-  };
+  },
 
-  deleteFile = async function (db, fileTypeId, isFileId = false) {
+  deleteFile: async function (db, fileTypeId, isFileId = false) {
     var result;
     if (isFileId) {
       result = await db
@@ -103,13 +102,13 @@ class file {
     } else {
       return { success: false, error: 6 };
     }
-  };
+  },
 
-  deleteOldPerms = async function (db) {
+  deleteOldPerms: async function (db) {
     await db
       .collection("fileUploadAccess")
       .deleteMany({ time: { $lt: Date.now() } });
-  };
-}
+  },
+};
 
 module.exports = file;

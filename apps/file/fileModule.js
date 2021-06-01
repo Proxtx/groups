@@ -1,10 +1,8 @@
 var channelModule = require("../channel/channelModule");
-channelModule = new channelModule();
 var file = require("../../modules/file");
-file = new file();
 
-class fileModule {
-  uploadFile = async function (db, Key, channelId, fileName) {
+var fileModule = {
+  uploadFile: async function (db, Key, channelId, fileName) {
     var channelOwn = await channelModule.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       var randomFileNumber = Math.floor(Math.random() * 100000);
@@ -27,9 +25,9 @@ class fileModule {
     } else {
       return channelOwn;
     }
-  };
+  },
 
-  listFiles = async function (db, Key, channelId) {
+  listFiles: async function (db, Key, channelId) {
     var channelOwn = await channelModule.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       return {
@@ -44,9 +42,9 @@ class fileModule {
     } else {
       return channelOwn;
     }
-  };
+  },
 
-  deleteFile = async function (db, Key, channelId, fileId) {
+  deleteFile: async function (db, Key, channelId, fileId) {
     var channelOwn = await channelModule.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       await db.collection("channelFiles").deleteMany({ fileId: fileId });
@@ -54,7 +52,7 @@ class fileModule {
     } else {
       return channelOwn;
     }
-  };
-}
+  },
+};
 
 module.exports = fileModule;

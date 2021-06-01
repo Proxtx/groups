@@ -17,7 +17,7 @@
 2. 2 = tel but not email
 3. 3 = none
 
-# Default Image DB entry:
+# Default File DB entry:
 
 ```json
 {

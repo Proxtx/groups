@@ -1,6 +1,5 @@
 const express = require("express");
 var chatModule = require("./chatModule");
-chatModule = new chatModule();
 
 const router = express.Router();
 

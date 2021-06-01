@@ -1,6 +1,5 @@
 const express = require("express");
 var channelModule = require("./channelModule");
-channelModule = new channelModule();
 
 const router = express.Router();
 

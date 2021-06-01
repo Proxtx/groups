@@ -13,8 +13,6 @@ router.use(
 
 var file = require("../modules/file");
 
-file = new file();
-
 router.post("/upload/:key", async (req, res) => {
   var web = req.files.web;
   res

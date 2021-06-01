@@ -1,14 +1,11 @@
 var key = require("./key");
-key = new key();
 var perm = require("./perm");
-perm = new perm();
 var genString = require("./genString");
-genString = new genString();
 
 perm.init();
 
-class auth {
-  signin = async function (db, email, password) {
+var auth = {
+  signin: async function (db, email, password) {
     var result = await db.collection("user").find({ email: email });
     result = await result.toArray();
     if (result.length > 0) {
@@ -28,8 +25,8 @@ class auth {
     } else {
       return { success: false, error: 1, text: "Not Found" };
     }
-  };
-  register = async function (db, email, password, username, tel) {
+  },
+  register: async function (db, email, password, username, tel) {
     var user = await db.collection("user").find({ email: email }).toArray();
     if (user.length > 0) {
       return { success: false, error: 5, text: "Already Exists" };
@@ -52,8 +49,8 @@ class auth {
         return { success: false, error: 4, text: "Missing Data" };
       }
     }
-  };
-  getPerms = async function (db, Key) {
+  },
+  getPerms: async function (db, Key) {
     var a = await key.getKey(db, Key);
     if (a.success) {
       var result = {};
@@ -73,15 +70,15 @@ class auth {
     } else {
       return a;
     }
-  };
-  getEmail = async function (db, email) {
+  },
+  getEmail: async function (db, email) {
     var user = await db.collection("user").find({ email: email });
     if ((await user.count()) > 0) {
       return { success: true, userId: (await user.toArray())[0].userId };
     } else {
       return { success: false, error: 6 };
     }
-  };
-}
+  },
+};
 
 module.exports = auth;

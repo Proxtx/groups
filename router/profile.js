@@ -4,8 +4,6 @@ const router = express.Router();
 
 var profile = require("../modules/profile");
 
-profile = new profile();
-
 router.post("/data", async (req, res) => {
   res
     .status(200)

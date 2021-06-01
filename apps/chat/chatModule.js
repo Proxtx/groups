@@ -1,17 +1,10 @@
-var key = require("../../modules/key");
-key = new key();
 var scrollview = require("../../modules/scrollview");
-scrollview = new scrollview();
-var config = require("../../modules/config");
-config = new config();
 var channelModule = require("../channel/channelModule");
-channelModule = new channelModule();
 
-class chatModule {
-  chatMessagesListener;
-  lastUpdateTime = 0;
+var chatModule = {
+  lastUpdateTime: 0,
 
-  sendMessage = async function (db, Key, text, channelId) {
+  sendMessage: async function (db, Key, text, channelId) {
     var channelOwn = await channelModule.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       var data = {
@@ -33,9 +26,9 @@ class chatModule {
     } else {
       return channelOwn;
     }
-  };
+  },
 
-  getMessages = async function (db, Key, channelId, start, amount) {
+  getMessages: async function (db, Key, channelId, start, amount) {
     var channelOwn = await channelModule.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       if (!this.chatMessagesListener) {
@@ -89,7 +82,7 @@ class chatModule {
     } else {
       return channelOwn;
     }
-  };
-}
+  },
+};
 
 module.exports = chatModule;

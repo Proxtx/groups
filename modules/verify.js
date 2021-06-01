@@ -2,9 +2,6 @@ var key = require("./key");
 var profile = require("./profile");
 const nodemailer = require("nodemailer");
 
-key = new key();
-profile = new profile();
-
 var transporter = nodemailer.createTransport({
   host: "mail.web.de",
   port: 587,
@@ -19,8 +16,8 @@ var transporter = nodemailer.createTransport({
   rateLimit: 1,
 });
 
-class verify {
-  getVerify = async function (db, Key) {
+var verify = {
+  getVerify: async function (db, Key) {
     var result = await key.getKey(db, Key);
     if (result.error == 3) {
       var user = (
@@ -49,8 +46,8 @@ class verify {
         return { success: true, verify: 0 };
       }
     }
-  };
-  genEmail = async function (db, key) {
+  },
+  genEmail: async function (db, key) {
     var cv = await this.getVerify(db, key);
     if (cv.success && cv.verify != 0 && cv.verify != 1) {
       var user = (
@@ -86,8 +83,8 @@ class verify {
     } else {
       return { success: false, error: 3 };
     }
-  };
-  verifyEmail = async function (db, key, code) {
+  },
+  verifyEmail: async function (db, key, code) {
     await this.deleteOldCodes(db);
     var cv = await this.getVerify(db, key);
     if (cv.success) {
@@ -117,8 +114,8 @@ class verify {
     } else {
       return cv;
     }
-  };
-  genEmailCode = async function (db, key) {
+  },
+  genEmailCode: async function (db, key) {
     var cv = await this.getVerify(db, key);
     if (cv.success) {
       var success = false;
@@ -152,20 +149,20 @@ class verify {
     } else {
       return cv;
     }
-  };
-  genCode = function (count) {
+  },
+  genCode: function (count) {
     var code = "";
     for (var i = 0; i < count; i++) {
       code += random(0, 9) + "";
     }
     return code;
-  };
-  deleteOldCodes = async function (db) {
+  },
+  deleteOldCodes: async function (db) {
     await db
       .collection("verEmailCodes")
       .deleteMany({ time: { $lt: Date.now() } });
-  };
-}
+  },
+};
 
 function random(min, max) {
   return Math.floor(Math.random() * (max + 1 - min)) + min;

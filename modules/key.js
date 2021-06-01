@@ -1,13 +1,12 @@
 var genString = require("./genString");
-genString = new genString();
 
-class key {
-  genKey = async function (db, userId) {
+var key = {
+  genKey: async function (db, userId) {
     var string = await genString.returnString(db, "keys", {}, "key");
     await db.collection("keys").insertOne({ key: string, userId: userId });
     return string;
-  };
-  getKey = async function (db, key) {
+  },
+  getKey: async function (db, key) {
     var result = await db.collection("keys").find({ key: key }).toArray();
     if (result.length > 0) {
       var user = await db
@@ -26,7 +25,7 @@ class key {
     } else {
       return { success: false, error: 1 };
     }
-  };
-}
+  },
+};
 
 module.exports = key;

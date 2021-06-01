@@ -21,9 +21,6 @@
 var auth = require("./auth");
 var key = require("./key");
 
-key = new key();
-auth = new auth();
-
 var authlvl = {
   email: {
     lvl: 2,
@@ -54,8 +51,8 @@ var authlvl = {
   },
 };
 
-class profile {
-  getData = async function (
+var profile = {
+  getData: async function (
     db,
     data,
     userKey,
@@ -96,8 +93,8 @@ class profile {
     } else {
       return { success: false, text: "DATA NOT FOUND", error: 6 };
     }
-  };
-}
+  },
+};
 
 fetchDataKey = async function (db, data, userKey) {
   return await fetchDataUserId(

@@ -1,12 +1,9 @@
 var channelModule = require("../channel/channelModule");
-channelModule = new channelModule();
 var key = require("../../modules/key");
-key = new key();
 var genString = require("../../modules/genString");
-genString = new genString();
 
-class groupModule {
-  initGroup = async function (db, users, title, Key) {
+var groupModule = {
+  initGroup: async function (db, users, title, Key) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       for (var i in users) {
@@ -35,9 +32,9 @@ class groupModule {
     } else {
       return auth;
     }
-  };
+  },
 
-  leaveGroup = async function (db, Key, groupId, userId) {
+  leaveGroup: async function (db, Key, groupId, userId) {
     var groupOwn = await this.groupOwn(db, Key, groupId);
     if (groupOwn.success) {
       if (groupOwn.auth.userId == userId) {
@@ -51,9 +48,9 @@ class groupModule {
     } else {
       return groupOwn;
     }
-  };
+  },
 
-  addMember = async function (db, Key, groupId, users) {
+  addMember: async function (db, Key, groupId, users) {
     var groupOwn = await this.groupOwn(db, Key, groupId);
     if (groupOwn.success) {
       var add = [];
@@ -81,9 +78,9 @@ class groupModule {
     } else {
       return groupOwn;
     }
-  };
+  },
 
-  groupInfo = async function (db, Key, groupId) {
+  groupInfo: async function (db, Key, groupId) {
     var groupOwn = await this.groupOwn(db, Key, groupId);
     if (groupOwn.success) {
       var info = {};
@@ -116,9 +113,9 @@ class groupModule {
     } else {
       return groupOwn;
     }
-  };
+  },
 
-  addChannel = async function (db, Key, groupId, title) {
+  addChannel: async function (db, Key, groupId, title) {
     var groupOwn = await this.groupOwn(db, Key, groupId);
     if (groupOwn.success) {
       var channel = await channelModule.initChannel(db, title, Key, groupId);
@@ -134,9 +131,9 @@ class groupModule {
     } else {
       return groupOwn;
     }
-  };
+  },
 
-  groupOwn = async function (db, Key, groupId) {
+  groupOwn: async function (db, Key, groupId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       groupId = groupId;
@@ -151,7 +148,7 @@ class groupModule {
     } else {
       return auth;
     }
-  };
-}
+  },
+};
 
 module.exports = groupModule;

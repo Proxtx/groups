@@ -1,8 +1,6 @@
 const express = require("express");
 var auth = require("../modules/auth");
 var key = require("../modules/key");
-auth = new auth();
-key = new key();
 
 const router = express.Router();
 

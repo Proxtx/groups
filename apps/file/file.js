@@ -1,6 +1,5 @@
 const express = require("express");
 var fileModule = require("./fileModule");
-fileModule = new fileModule();
 
 const router = express.Router();
 

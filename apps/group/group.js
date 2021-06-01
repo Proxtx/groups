@@ -1,6 +1,5 @@
 const express = require("express");
 var groupModule = require("./groupModule");
-groupModule = new groupModule();
 
 const router = express.Router();
 

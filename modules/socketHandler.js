@@ -1,19 +1,15 @@
 var genString = require("./genString");
-genString = new genString();
 
-class socketHandler {
-  io;
-  db;
+var socketHandler = {
+  onConnect: [function (socket) {}],
 
-  onConnect = [function (socket) {}];
-
-  onMessage = [
+  onMessage: [
     function (msg, socket) {
       this.handleMessage(msg, socket);
     },
-  ];
+  ],
 
-  handleMessage = function (msg, socket) {
+  handleMessage: function (msg, socket) {
     var cmdChain = msg.split("$_$");
     if (cmdChain[0] == "subscribe") {
       this.subscribe(cmdChain, socket);
@@ -21,9 +17,9 @@ class socketHandler {
     if (cmdChain[0] == "confirm") {
       this.confirmSocket(cmdChain, socket);
     }
-  };
+  },
 
-  subscribe = function (cmdChain, socket) {
+  subscribe: function (cmdChain, socket) {
     if (!this.subs[cmdChain[1]]) {
       this.subs[cmdChain[1]] = {};
     }
@@ -34,24 +30,24 @@ class socketHandler {
       cmdChain: cmdChain,
       socket: socket,
     });
-  };
+  },
 
-  awaitSocketConfirm = {};
+  awaitSocketConfirm: {},
 
-  confirmSocket = function (cmdChain, socket) {
+  confirmSocket: function (cmdChain, socket) {
     this.awaitSocketConfirm[socket.id] = undefined;
-  };
+  },
 
-  deleteSocket = function (socket) {
+  deleteSocket: function (socket) {
     if (this.awaitSocketConfirm[socket.id]) {
       this.subs[this.awaitSocketConfirm[socket.id].module][
         this.awaitSocketConfirm[socket.id].key
       ].splice(this.awaitSocketConfirm[socket.id].index, 1);
       this.awaitSocketConfirm[socket.id] = undefined;
     }
-  };
+  },
 
-  sendMessage = function (module, key, index, msg) {
+  sendMessage: function (module, key, index, msg) {
     this.subs[module][key][index].socket.emit("message", msg);
     this.awaitSocketConfirm[this.subs[module][key][index].socket.id] = {
       module: module,
@@ -63,11 +59,11 @@ class socketHandler {
       this.deleteSocket.bind(this, this.subs[module][key][index].socket),
       10000
     );
-  };
+  },
 
-  subs = {};
+  subs: {},
 
-  init = function (db, io) {
+  init: function (db, io) {
     this.db = db;
     this.io = io;
 
@@ -88,7 +84,7 @@ class socketHandler {
         );
       }.bind(this)
     );
-  };
-}
+  },
+};
 
 module.exports = socketHandler;

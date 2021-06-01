@@ -1,10 +1,8 @@
 var genString = require("../../modules/genString");
-genString = new genString();
 var key = require("../../modules/key");
-key = new key();
 
-class channelModule {
-  initChannel = async function (db, title, Key, groupId) {
+var channelModule = {
+  initChannel: async function (db, title, Key, groupId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       var channelId = await genString.returnString(
@@ -23,8 +21,8 @@ class channelModule {
     } else {
       return auth;
     }
-  };
-  getChannelInfo = async function (db, Key, channelId) {
+  },
+  getChannelInfo: async function (db, Key, channelId) {
     var channelOwn = await this.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       var channel = (
@@ -54,9 +52,9 @@ class channelModule {
     } else {
       return channelOwn;
     }
-  };
+  },
 
-  setChannelTitle = async function (db, Key, channelId, title) {
+  setChannelTitle: async function (db, Key, channelId, title) {
     var channelOwn = await this.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
       await db
@@ -66,9 +64,9 @@ class channelModule {
     } else {
       return channelOwn;
     }
-  };
+  },
 
-  channelOwn = async function (db, Key, channelId) {
+  channelOwn: async function (db, Key, channelId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       var groupId = await db
@@ -92,7 +90,7 @@ class channelModule {
     } else {
       return auth;
     }
-  };
-}
+  },
+};
 
 module.exports = channelModule;

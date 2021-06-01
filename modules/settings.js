@@ -1,10 +1,8 @@
 var key = require("./key");
-var key = new key();
 var file = require("./file");
-file = new file();
 
-class settings {
-  changeProfilePicture = async function (db, Key) {
+var settings = {
+  changeProfilePicture: async function (db, Key) {
     var auth = await key.getKey(db, Key);
     if (key.getKey) {
       var upload = await file.createUploadPerm(
@@ -23,7 +21,7 @@ class settings {
     } else {
       return auth;
     }
-  };
-}
+  },
+};
 
 module.exports = settings;

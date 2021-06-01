@@ -1,5 +1,5 @@
-class genString {
-  returnString = async function (db, queryCollection, queryJson, queryJsonKey) {
+var genString = {
+  returnString: async function (db, queryCollection, queryJson, queryJsonKey) {
     var string = "";
     var success = false;
     while (!success) {
@@ -12,8 +12,8 @@ class genString {
       }
     }
     return string;
-  };
-  genString = function (length) {
+  },
+  genString: function (length) {
     var string = "";
     var letters = [
       "a",
@@ -57,11 +57,11 @@ class genString {
       string += letters[this.random(0, letters.length - 1)];
     }
     return string;
-  };
+  },
 
-  random = function (min, max) {
+  random: function (min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min;
-  };
-}
+  },
+};
 
 module.exports = genString;
