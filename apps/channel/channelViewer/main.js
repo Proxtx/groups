@@ -23,6 +23,14 @@ async function initChannel() {
   document.getElementById("chatTitleText").innerHTML = channelInfo.title;
   document.getElementById("chatImage").src = "/file/get/" + channelInfo.img;
 
+  for (var i in channelInfo.apps) {
+    tabs.push({
+      name: channelInfo.apps[i].name,
+      link: "/apps/" + channelInfo.apps[i].app + "/channelEmbed",
+      app: channelInfo.apps[i].app,
+    });
+  }
+
   for (var u in channelInfo.users) {
     await addMemberDataToList(channelInfo.users[u]);
   }
@@ -54,12 +62,12 @@ var changeNameOpen = false;
 function initChangeChatName() {
   if (!changeNameOpen) {
     changeNameOpen = true;
-    processNodeObj(document.body, [
+    processNodeObj(document.getElementById("channelViewScreen"), [
       {
         name: "uBoxSmall",
         title: "Channel Name",
         left: "0px",
-        top: "60px",
+        top: "0px",
         width: "350px",
         id: "changeNameBox",
         styles: [["zIndex", 2]],
@@ -269,10 +277,7 @@ function onMouseUpdate(e) {
   y = e.pageY;
 }
 
-var tabs = [
-  { name: "Chat", link: "/apps/chat/chatEmbed" },
-  { name: "Files", link: "/apps/file/" },
-];
+var tabs = [];
 
 var selectedTab = 0;
 
@@ -288,6 +293,17 @@ function initTabs() {
       function (index) {
         selectTab(index);
       }.bind(this, i)
+    );
+    node.addEventListener(
+      "contextmenu",
+      function (e) {
+        if (currentChannelAppOptionsNode) {
+          currentChannelAppOptionsNode.remove();
+        }
+        showChannelAppOptions(this.app);
+        e.preventDefault();
+      }.bind({ app: tabs[i].app }),
+      false
     );
     document.getElementById("channelSelectApp").appendChild(node);
     deselectTab(i);
@@ -305,4 +321,90 @@ function selectTab(index) {
 function deselectTab(index) {
   tabs[index].node.style.color = "var(--secondary)";
   tabs[index].node.children[1].style.display = "none";
+}
+
+var currentChannelAppOptionsNode;
+
+function showChannelAppOptions(app) {
+  processNodeObj(document.body, [
+    {
+      name: "uBoxSmall",
+      title: "",
+      top: y + "px",
+      left: x + "px",
+      id: "channelAppOptionsPopUp",
+      styles: [
+        ["padding", "5px"],
+        ["zIndex", "3"],
+      ],
+      nodes: [
+        {
+          name: "uButtonSecondary",
+          text: "Delete",
+          styles: [["margin", "0px"]],
+          click: deleteApp.bind({ this: this, app: app }),
+        },
+      ],
+    },
+  ]);
+  window.setTimeout(function () {
+    currentChannelAppOptionsNode = document.getElementById(
+      "channelAppOptionsPopUp"
+    );
+  }, 100);
+}
+
+document.addEventListener("click", function () {
+  if (currentChannelAppOptionsNode) {
+    currentChannelAppOptionsNode.remove();
+  }
+});
+
+async function deleteApp() {
+  await Fetch("/apps/channel/deleteApp", {
+    channelId: channelId,
+    app: this.app,
+    key: window.localStorage.getItem("key"),
+  });
+}
+
+var PopUp = new popUp();
+
+/* PopUp.addPopUp([{ name: "Add" }], document.getElementById("addAppToChannel"), {
+  left: true,
+  right: false,
+}); */
+document
+  .getElementById("addAppToChannel")
+  .addEventListener("click", addAppPopUp);
+function addAppPopUp() {
+  processNodeObj(document.body, [
+    {
+      name: "uBoxSmall",
+      title: "App Name",
+      left: x + "px",
+      top: y + "px",
+      width: "350px",
+      id: "addAppPopUp",
+      styles: [["zIndex", 2]],
+      nodes: [
+        {
+          name: "uInput",
+          id: "addAppInput",
+          value: "",
+        },
+        { name: "uButtonMain", text: "Ok", id: "addAppConfirm", click: addApp },
+      ],
+    },
+  ]);
+
+  addToPopUpCloseList(document.getElementById("addAppPopUp"));
+}
+
+async function addApp() {
+  await Fetch("/apps/channel/addApp", {
+    channelId: channelId,
+    key: window.localStorage.getItem("key"),
+    app: document.getElementById("addAppInput").value,
+  });
 }

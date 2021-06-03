@@ -133,6 +133,23 @@ var groupModule = {
     }
   },
 
+  deleteChannel: async function (db, Key, groupId, channelId) {
+    var groupOwn = await this.groupOwn(db, Key, groupId);
+    if (groupOwn.success) {
+      var channel = await channelModule.delete(db, channelId, Key);
+      if (channel.success) {
+        await db
+          .collection("groups")
+          .updateOne({ groupId: groupId }, { $pull: { channels: channelId } });
+        return { success: true };
+      } else {
+        return channel;
+      }
+    } else {
+      return groupOwn;
+    }
+  },
+
   groupOwn: async function (db, Key, groupId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {

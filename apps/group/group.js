@@ -70,4 +70,17 @@ router.post("/addChannel", async (req, res) => {
     );
 });
 
+router.post("/deleteChannel", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.deleteChannel(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId,
+        req.body.channelId
+      )
+    );
+});
+
 module.exports = router;

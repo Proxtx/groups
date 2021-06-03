@@ -20,8 +20,10 @@ var apps = {
   },
 
   loadApps: async function (app, express) {
+    global.apps = {};
     this.apps = JSON.parse(fs.readFileSync("apps.json", "utf-8"));
     for (var i in this.apps) {
+      global.apps[i] = this.apps[i];
       this.loadApp(app, express, i);
     }
   },

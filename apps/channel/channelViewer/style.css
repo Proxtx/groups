@@ -72,3 +72,7 @@
   position: absolute;
   bottom: 0;
 }
+#addAppToChannel {
+  position: relative;
+  top: 10%;
+}

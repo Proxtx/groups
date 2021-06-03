@@ -53,6 +53,16 @@ var fileModule = {
       return channelOwn;
     }
   },
+
+  delete: async function (db, channelId, Key) {
+    var files = await db
+      .collection("channelFiles")
+      .find({ channelId: channelId })
+      .toArray();
+    for (var i in files) {
+      await this.deleteFile(db, Key, channelId, files[i].fileId);
+    }
+  },
 };
 
 module.exports = fileModule;

@@ -17,6 +17,8 @@ var channelModule = {
         channelId: channelId,
         time: Date.now(),
       });
+      await this.addApp(db, Key, channelId, "chat");
+      await this.addApp(db, Key, channelId, "file");
       return { success: true, channelId: channelId };
     } else {
       return auth;
@@ -29,7 +31,7 @@ var channelModule = {
         await db
           .collection("channels")
           .find({ channelId: channelId })
-          .project({ _id: 0, title: 1, time: 1, groupId: 1 })
+          .project({ _id: 0, title: 1, time: 1, groupId: 1, apps: 1 })
           .toArray()
       )[0];
       var group = (
@@ -44,7 +46,14 @@ var channelModule = {
         time: channel.time,
         users: group.users,
         img: group.img,
+        apps: [],
       };
+      for (var i in channel.apps) {
+        info.apps.push({
+          app: channel.apps[i],
+          name: global.apps[channel.apps[i]].appName,
+        });
+      }
       return {
         success: true,
         channel: info,
@@ -60,6 +69,81 @@ var channelModule = {
       await db
         .collection("channels")
         .updateOne({ channelId: channelId }, { $set: { title: title } });
+      return { success: true };
+    } else {
+      return channelOwn;
+    }
+  },
+
+  addApp: async function (db, Key, channelId, app) {
+    var channelOwn = await this.channelOwn(db, Key, channelId);
+    if (channelOwn.success) {
+      if (
+        (await db
+          .collection("channels")
+          .find({ channelId: channelId, apps: app })
+          .count()) < 1
+      ) {
+        if (global.apps[app] && global.apps[app].channel) {
+          var App = require("../" + app + "/" + global.apps[app].channel);
+          if (App.init) {
+            App.init(db, channelId, Key);
+          }
+          await db
+            .collection("channels")
+            .updateOne({ channelId: channelId }, { $push: { apps: app } });
+          return { success: true };
+        } else {
+          return { success: false, error: 6 };
+        }
+      } else {
+        return { success: false, error: 5 };
+      }
+    } else {
+      return channelOwn;
+    }
+  },
+
+  deleteApp: async function (db, Key, channelId, app) {
+    var channelOwn = await this.channelOwn(db, Key, channelId);
+    if (channelOwn.success) {
+      //if (app == "chat") return { success: false, error: 2 };
+      if (
+        (await db
+          .collection("channels")
+          .find({ channelId: channelId, apps: app })
+          .count()) > 0
+      ) {
+        var App = require("../" + app + "/" + global.apps[app].channel);
+        if (App.delete) {
+          await App.delete(db, channelId, Key);
+        }
+        await db
+          .collection("channels")
+          .updateOne({ channelId: channelId }, { $pull: { apps: app } });
+        return { success: true };
+      } else {
+        return { success: false, error: 6 };
+      }
+    } else {
+      return channelOwn;
+    }
+  },
+
+  delete: async function (db, channelId, Key) {
+    var channelOwn = await this.channelOwn(db, Key, channelId);
+    if (channelOwn.success) {
+      var apps = (
+        await db
+          .collection("channels")
+          .find({ channelId: channelId })
+          .project({ apps: 1 })
+          .toArray()
+      )[0].apps;
+      for (var i in apps) {
+        await this.deleteApp(db, Key, channelId, apps[i]);
+      }
+      await db.collection("channels").deleteMany({ channelId: channelId });
       return { success: true };
     } else {
       return channelOwn;

@@ -1,7 +1,8 @@
 {
     "chat": {
         "entry": "chat.js",
-        "channel": "chatModule.js"
+        "channel": "chatModule.js",
+        "appName": "Chat"
     },
     "channel": {
         "entry": "channel.js"}
@@ -11,6 +12,7 @@
     ,
     "file": {
         "entry": "file.js",
-        "channel": "fileModule.js"
+        "channel": "fileModule.js",
+        "appName": "File"
     }
 }

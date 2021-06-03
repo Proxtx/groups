@@ -70,4 +70,30 @@ router.post("/addMember", async (req, res) => {
     );
 });
 
+router.post("/addApp", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await channelModule.addApp(
+        req.app.locals.db,
+        req.body.key,
+        req.body.channelId,
+        req.body.app
+      )
+    );
+});
+
+router.post("/deleteApp", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await channelModule.deleteApp(
+        req.app.locals.db,
+        req.body.key,
+        req.body.channelId,
+        req.body.app
+      )
+    );
+});
+
 module.exports = router;

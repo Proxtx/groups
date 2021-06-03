@@ -1,4 +1,4 @@
-var imagePath = "/apps/file/file.png";
+var imagePath = "/apps/file/channelEmbed/file.png";
 
 async function displayFiles() {
   var result = await Fetch("/apps/file/list", {

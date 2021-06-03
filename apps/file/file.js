@@ -3,7 +3,7 @@ var fileModule = require("./fileModule");
 
 const router = express.Router();
 
-global.file.addStatic("", "fileEmbed");
+global.file.addStatic("channelEmbed", "fileEmbed");
 
 router.post("/upload", async (req, res) => {
   res

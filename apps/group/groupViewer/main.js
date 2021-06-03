@@ -38,6 +38,12 @@ function newChannelListEntry(title, ChannelId) {
     "click",
     loadChannel.bind({ node: node, channelId: ChannelId })
   );
+  var p = new popUp();
+  p.addPopUp(
+    [{ name: "Delete", job: deleteChannel.bind({ channelId: ChannelId }) }],
+    node,
+    { left: false, right: true }
+  );
   document.getElementById("channelList").appendChild(node);
   return node;
 }
@@ -141,4 +147,12 @@ async function addChannel() {
     title: document.getElementById("addChannelTitle").value,
   });
   cancelAddChannelTitleInput();
+}
+
+async function deleteChannel() {
+  await Fetch("/apps/group/deleteChannel", {
+    key: window.localStorage.getItem("key"),
+    groupId: groupId,
+    channelId: this.channelId,
+  });
 }
