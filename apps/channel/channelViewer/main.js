@@ -1,5 +1,3 @@
-var userId;
-
 var userData = {};
 
 var appScreen = new screen();
@@ -7,12 +5,6 @@ var appScreen = new screen();
 appScreen.init("channelViewScreen");
 
 async function initChannel() {
-  userId = (
-    await Fetch("/auth/key", {
-      key: window.localStorage.getItem("key"),
-    })
-  ).userId;
-
   var channelInfo = (
     await Fetch("/apps/channel/getChannelInfo", {
       key: window.localStorage.getItem("key"),
@@ -129,18 +121,20 @@ function initShowMembers() {
       id: "groupMemberClose",
       click: closeMembersPopUpBox,
     });
-    nA.push({
-      name: "uButtonSecondary",
-      text: "Add Member",
-      id: "groupMemberAdd",
-      click: openAddMember,
-    });
-    nA.push({
-      name: "uButtonSecondary",
-      text: "Leave Group",
-      id: "groupMemberLeave",
-      click: leaveGroup,
-    });
+    if (isGroupAdmin) {
+      nA.push({
+        name: "uButtonSecondary",
+        text: "Add Member",
+        id: "groupMemberAdd",
+        click: openAddMember,
+      });
+      nA.push({
+        name: "uButtonSecondary",
+        text: "Leave Group",
+        id: "groupMemberLeave",
+        click: leaveGroup,
+      });
+    }
     processNodeObj(document.body, [
       {
         name: "uBoxSmall",
@@ -294,17 +288,19 @@ function initTabs() {
         selectTab(index);
       }.bind(this, i)
     );
-    node.addEventListener(
-      "contextmenu",
-      function (e) {
-        if (currentChannelAppOptionsNode) {
-          currentChannelAppOptionsNode.remove();
-        }
-        showChannelAppOptions(this.app);
-        e.preventDefault();
-      }.bind({ app: tabs[i].app }),
-      false
-    );
+    if (isGroupAdmin) {
+      node.addEventListener(
+        "contextmenu",
+        function (e) {
+          if (currentChannelAppOptionsNode) {
+            currentChannelAppOptionsNode.remove();
+          }
+          showChannelAppOptions(this.app);
+          e.preventDefault();
+        }.bind({ app: tabs[i].app }),
+        false
+      );
+    }
     document.getElementById("channelSelectApp").appendChild(node);
     deselectTab(i);
   }

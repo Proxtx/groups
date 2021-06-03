@@ -1,8 +1,4 @@
-var key = require("./key");
-var perm = require("./perm");
 var genString = require("./genString");
-
-perm.init();
 
 var auth = {
   signin: async function (db, email, password) {
@@ -48,27 +44,6 @@ var auth = {
       } else {
         return { success: false, error: 4, text: "Missing Data" };
       }
-    }
-  },
-  getPerms: async function (db, Key) {
-    var a = await key.getKey(db, Key);
-    if (a.success) {
-      var result = {};
-      var user = (
-        await db
-          .collection("user")
-          .find({ userId: a.userId })
-          .project({ lvl: 1, _id: 0 })
-          .toArray()
-      )[0];
-      for (var i in perm.perm) {
-        if (perm.perm[i][user.lvl]) {
-          result[i] = true;
-        }
-      }
-      return { success: true, perms: result };
-    } else {
-      return a;
     }
   },
   getEmail: async function (db, email) {

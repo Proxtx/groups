@@ -1,5 +1,6 @@
 var genString = require("../../modules/genString");
 var key = require("../../modules/key");
+var perm = require("../../modules/perm");
 
 var channelModule = {
   initChannel: async function (db, title, Key, groupId) {
@@ -64,7 +65,7 @@ var channelModule = {
   },
 
   setChannelTitle: async function (db, Key, channelId, title) {
-    var channelOwn = await this.channelOwn(db, Key, channelId);
+    var channelOwn = await this.channelOwn(db, Key, channelId, "admin");
     if (channelOwn.success) {
       await db
         .collection("channels")
@@ -76,7 +77,7 @@ var channelModule = {
   },
 
   addApp: async function (db, Key, channelId, app) {
-    var channelOwn = await this.channelOwn(db, Key, channelId);
+    var channelOwn = await this.channelOwn(db, Key, channelId, "admin");
     if (channelOwn.success) {
       if (
         (await db
@@ -105,9 +106,8 @@ var channelModule = {
   },
 
   deleteApp: async function (db, Key, channelId, app) {
-    var channelOwn = await this.channelOwn(db, Key, channelId);
+    var channelOwn = await this.channelOwn(db, Key, channelId, "admin");
     if (channelOwn.success) {
-      //if (app == "chat") return { success: false, error: 2 };
       if (
         (await db
           .collection("channels")
@@ -131,7 +131,7 @@ var channelModule = {
   },
 
   delete: async function (db, channelId, Key) {
-    var channelOwn = await this.channelOwn(db, Key, channelId);
+    var channelOwn = await this.channelOwn(db, Key, channelId, "admin");
     if (channelOwn.success) {
       var apps = (
         await db
@@ -150,7 +150,7 @@ var channelModule = {
     }
   },
 
-  channelOwn: async function (db, Key, channelId) {
+  channelOwn: async function (db, Key, channelId, permS = "read") {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       var groupId = await db
@@ -158,7 +158,16 @@ var channelModule = {
         .find({ channelId: channelId })
         .project({ groupId: 1 })
         .toArray();
-      if (groupId.length > 0) {
+      if (
+        groupId.length > 0 &&
+        (permS == "read" ||
+          (await perm.get(
+            db,
+            { groupId: groupId[0].groupId },
+            permS,
+            auth.userId
+          )))
+      ) {
         groupId = groupId[0].groupId;
         var group = await db
           .collection("groups")

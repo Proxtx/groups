@@ -1,6 +1,7 @@
 var channelModule = require("../channel/channelModule");
 var key = require("../../modules/key");
 var genString = require("../../modules/genString");
+var perm = require("../../modules/perm");
 
 var groupModule = {
   initGroup: async function (db, users, title, Key) {
@@ -35,23 +36,19 @@ var groupModule = {
   },
 
   leaveGroup: async function (db, Key, groupId, userId) {
-    var groupOwn = await this.groupOwn(db, Key, groupId);
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
-      if (groupOwn.auth.userId == userId) {
-        await db
-          .collection("groups")
-          .updateOne({ groupId: groupId }, { $pull: { users: userId } });
-        return { success: true };
-      } else {
-        return { success: false, error: 2 };
-      }
+      await db
+        .collection("groups")
+        .updateOne({ groupId: groupId }, { $pull: { users: userId } });
+      return { success: true };
     } else {
       return groupOwn;
     }
   },
 
   addMember: async function (db, Key, groupId, users) {
-    var groupOwn = await this.groupOwn(db, Key, groupId);
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
       var add = [];
       for (var i in users) {
@@ -116,7 +113,7 @@ var groupModule = {
   },
 
   addChannel: async function (db, Key, groupId, title) {
-    var groupOwn = await this.groupOwn(db, Key, groupId);
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
       var channel = await channelModule.initChannel(db, title, Key, groupId);
       var channelId = channel.channelId;
@@ -134,7 +131,7 @@ var groupModule = {
   },
 
   deleteChannel: async function (db, Key, groupId, channelId) {
-    var groupOwn = await this.groupOwn(db, Key, groupId);
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
       var channel = await channelModule.delete(db, channelId, Key);
       if (channel.success) {
@@ -150,14 +147,18 @@ var groupModule = {
     }
   },
 
-  groupOwn: async function (db, Key, groupId) {
+  groupOwn: async function (db, Key, groupId, permS = "read") {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       groupId = groupId;
       var group = await db
         .collection("groups")
         .find({ groupId: groupId, users: auth.userId });
-      if ((await group.count()) > 0) {
+      if (
+        (await group.count()) > 0 &&
+        (permS == "read" ||
+          (await perm.get(db, { groupId: groupId }, permS, auth.userId)))
+      ) {
         return { success: true, auth: auth };
       } else {
         return { success: false, error: 6 };

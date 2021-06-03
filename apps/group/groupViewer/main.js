@@ -1,12 +1,26 @@
 var groupId = "xiyoch1qmsmo7lp27";
 
+var userId;
+
 var groupScreen = new screen();
+
+var isGroupAdmin = false;
 
 groupScreen.init("groupViewScreen");
 
 var groupInfo = {};
 
 async function main() {
+  userId = (
+    await Fetch("/auth/key", {
+      key: window.localStorage.getItem("key"),
+    })
+  ).userId;
+
+  isGroupAdmin = await getPerm({ groupId: groupId }, "admin", userId);
+
+  applyPermStyle({ groupId: groupId }, "admin", userId, "group");
+
   groupInfo = await Fetch("/apps/group/info", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
@@ -38,12 +52,14 @@ function newChannelListEntry(title, ChannelId) {
     "click",
     loadChannel.bind({ node: node, channelId: ChannelId })
   );
-  var p = new popUp();
-  p.addPopUp(
-    [{ name: "Delete", job: deleteChannel.bind({ channelId: ChannelId }) }],
-    node,
-    { left: false, right: true }
-  );
+  if (isGroupAdmin) {
+    var p = new popUp();
+    p.addPopUp(
+      [{ name: "Delete", job: deleteChannel.bind({ channelId: ChannelId }) }],
+      node,
+      { left: false, right: true }
+    );
+  }
   document.getElementById("channelList").appendChild(node);
   return node;
 }

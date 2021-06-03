@@ -1,10 +1,6 @@
 var scrollview = require("../../modules/scrollview");
 var channelModule = require("../channel/channelModule");
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 var chatModule = {
   lastUpdateTime: 0,
 
