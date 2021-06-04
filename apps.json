@@ -1,18 +1,24 @@
 {
-    "chat": {
-        "entry": "chat.js",
-        "channel": "chatModule.js",
-        "appName": "Chat"
-    },
-    "channel": {
-        "entry": "channel.js"}
-        ,
-    "group": {
-        "entry": "group.js"}
-    ,
-    "file": {
-        "entry": "file.js",
-        "channel": "fileModule.js",
-        "appName": "File"
-    }
+  "chat": {
+    "entry": "chat.js",
+    "channel": "chatModule.js",
+    "appName": "Chat"
+  },
+  "channel": {
+    "entry": "channel.js"
+  },
+  "group": {
+    "entry": "group.js",
+    "userApp": "groupModule.js",
+    "img": "groups.png",
+    "appName": "Group"
+  },
+  "file": {
+    "entry": "file.js",
+    "channel": "fileModule.js",
+    "appName": "File"
+  },
+  "main": {
+    "entry": "main.js"
+  }
 }

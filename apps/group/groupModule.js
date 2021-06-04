@@ -4,7 +4,7 @@ var genString = require("../../modules/genString");
 var perm = require("../../modules/perm");
 
 var groupModule = {
-  initGroup: async function (db, users, title, Key) {
+  initGroup: async function (db, users, name, Key) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
       for (var i in users) {
@@ -19,7 +19,7 @@ var groupModule = {
             await channelModule.initChannel(db, "General", Key, groupId)
           ).channelId;
           await db.collection("groups").insertOne({
-            title: title,
+            name: name,
             users: users,
             groupId: groupId,
             time: Date.now(),
@@ -85,11 +85,11 @@ var groupModule = {
         await db
           .collection("groups")
           .find({ groupId: groupId })
-          .project({ title: 1, channels: 1, img: 1 })
+          .project({ name: 1, channels: 1, img: 1 })
           .toArray()
       )[0];
       info.img = group.img;
-      info.title = group.title;
+      info.name = group.name;
       info.channels = [];
       for (var i in group.channels) {
         info.channels.push({
@@ -144,6 +144,55 @@ var groupModule = {
       }
     } else {
       return groupOwn;
+    }
+  },
+
+  addAdmin: async function (db, Key, groupId, userId) {
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
+    if (groupOwn.success) {
+      await perm.set(db, { groupId: groupId }, "admin", userId, true);
+      return { success: true };
+    } else {
+      return groupOwn;
+    }
+  },
+
+  removeAdmin: async function (db, Key, groupId, userId) {
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
+    if (groupOwn.success) {
+      await perm.delete(db, { groupId: groupId }, "admin", userId);
+      return { success: true };
+    } else {
+      return groupOwn;
+    }
+  },
+
+  listGroups: async function (db, Key) {
+    var auth = await key.getKey(db, Key);
+    if (auth.success) {
+      var groups = await db
+        .collection("groups")
+        .find({ users: auth.userId })
+        .project({ name: 1, groupId: 1, img: 1 })
+        .toArray();
+      var rGroups = [];
+      for (var i in groups) {
+        var p = {
+          name: groups[i].name,
+          groupId: groups[i].groupId,
+          img: groups[i].img,
+          admin: await perm.get(
+            db,
+            { groupId: groups[i].groupId },
+            "admin",
+            auth.userId
+          ),
+        };
+        rGroups.push(p);
+      }
+      return { success: true, groups: rGroups };
+    } else {
+      return auth;
     }
   },
 

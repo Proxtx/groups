@@ -3,8 +3,8 @@ var groupModule = require("./groupModule");
 
 const router = express.Router();
 
-global.group.addStatic("", "groupTestScreen");
 global.group.addStatic("groupEmbed", "groupViewer");
+global.group.addStatic("mainApp", "mainApp");
 
 router.post("/initGroup", async (req, res) => {
   res
@@ -81,6 +81,38 @@ router.post("/deleteChannel", async (req, res) => {
         req.body.channelId
       )
     );
+});
+
+router.post("/addAdmin", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.addAdmin(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId,
+        req.body.userId
+      )
+    );
+});
+
+router.post("/removeAdmin", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.removeAdmin(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId,
+        req.body.userId
+      )
+    );
+});
+
+router.post("/listGroups", async (req, res) => {
+  res
+    .status(200)
+    .send(await groupModule.listGroups(req.app.locals.db, req.body.key));
 });
 
 module.exports = router;

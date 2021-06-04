@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 var apps = {
   apps,
@@ -6,6 +7,11 @@ var apps = {
     console.log("Loading App: " + appName);
     global[appName] = {};
     global[appName].name = appName;
+    if (this.apps[appName].img) {
+      global[appName].img = path.resolve(
+        __dirname + "/../apps/" + appName + "/" + this.apps[appName].img
+      );
+    }
     global[appName].addStatic = function (path, filePath) {
       app.use(
         "/apps/" + this.name + "/" + path,

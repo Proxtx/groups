@@ -10,7 +10,7 @@ class popUp {
       node.addEventListener(
         "contextmenu",
         function (e) {
-          var f = this.createPopUp.bind(this);
+          var f = this.createPopUp.bind(this, e);
           f();
           e.preventDefault();
         }.bind(this),
@@ -21,14 +21,14 @@ class popUp {
       node.addEventListener(
         "click",
         function (e) {
-          var f = this.createPopUp.bind(this);
+          var f = this.createPopUp.bind(this, e);
           f();
         }.bind(this)
       );
     }
   };
 
-  createPopUp = async function () {
+  createPopUp = async function (e) {
     var promise = new Promise((resolve) => {
       this.promote = resolve;
     });
@@ -38,9 +38,14 @@ class popUp {
       optionArray.push({
         name: "uButtonSecondary",
         text: this.options[i].name,
-        styles: [["margin", "0px"]],
+        styles: [
+          ["marginTop", "2px"],
+          ["marginBottom", "2px"],
+          ["width", "100%"],
+        ],
         click: this.promote.bind(this, this.options[i].name),
       });
+      optionArray.push({ name: "uHTML", html: "<br>" });
     }
     var id = Math.floor(Math.random() * 10000);
     processNodeObj(document.body, [
@@ -57,23 +62,10 @@ class popUp {
         nodes: optionArray,
       },
     ]);
-    window.setTimeout(
-      function (id) {
-        document.addEventListener(
-          "click",
-          function () {
-            this.node.remove();
-          }.bind({ node: document.getElementById(id) })
-        );
-        document.addEventListener(
-          "contextmenu",
-          function () {
-            this.node.remove();
-          }.bind({ node: document.getElementById(id) })
-        );
-      }.bind(this, id),
-      1000
-    );
+    addToPopUpCloseList(document.getElementById(id));
+    if (e.pageX > window.innerWidth / 2) {
+      document.getElementById(id).style.transform = "translateX(-100%)";
+    }
     var type;
     await promise.then((result) => {
       type = result;
@@ -124,5 +116,5 @@ document.addEventListener("click", function () {
 function addToPopUpCloseList(node) {
   window.setTimeout(function () {
     popUpCloseList.push(node);
-  }, 1000);
+  }, 50);
 }

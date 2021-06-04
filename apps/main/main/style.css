@@ -1,0 +1,46 @@
+#appsList {
+  position: absolute;
+  height: 100%;
+  background-color: var(--bgL1);
+  width: 70px;
+  left: 0;
+  top: 0;
+}
+#mainScreen {
+  position: absolute;
+  height: 100%;
+  width: calc(100% - 70px);
+  left: 70px;
+  top: 0;
+  background-color: var(--bgL2);
+}
+.mainApp {
+  position: relative;
+  width: 70px;
+  height: 55px;
+  color: var(--textColor);
+  cursor: pointer;
+}
+.mainAppSelect {
+  width: 3px;
+  height: 95%;
+  background-color: var(--accentColor);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+}
+.mainAppImg {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 50%;
+}
+.mainAppName {
+  position: absolute;
+  left: 50%;
+  top: 90%;
+  font-size: 70%;
+  transform: translate(-50%, -100%);
+}

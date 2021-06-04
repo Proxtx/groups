@@ -47,6 +47,16 @@ async function addMemberDataToList(userId) {
         data: "profileImage",
       })
     ).data;
+
+  userData[userId].isGroupAdmin = (
+    await Fetch("/perm/get", {
+      userId: userId,
+      id: {
+        groupId: groupId,
+      },
+      perm: "admin",
+    })
+  ).state;
 }
 
 var changeNameOpen = false;
@@ -112,6 +122,7 @@ function initShowMembers() {
         name: "uUserDisplay",
         author: userData[i].author,
         img: userData[i].img,
+        id: "userDisplay_" + i,
       });
     }
 
@@ -150,6 +161,30 @@ function initShowMembers() {
         nodes: nA,
       },
     ]);
+    if (isGroupAdmin) {
+      for (var x in userData) {
+        var options = [
+          {
+            name: "Kick",
+            job: leaveGroup.bind(this, x),
+          },
+          {
+            name: "Make Admin",
+            job: addAdmin.bind(this, x),
+          },
+        ];
+        if (userData[x].isGroupAdmin) {
+          options[1] = {
+            name: "Remove Admin",
+            job: removeAdmin.bind(this, x),
+          };
+        }
+        var p = new popUp();
+        p.addPopUp(options, document.getElementById("userDisplay_" + x), {
+          right: true,
+        });
+      }
+    }
   }
 }
 
@@ -158,11 +193,29 @@ function closeMembersPopUpBox() {
   showMembersOpen = false;
 }
 
-async function leaveGroup() {
+async function leaveGroup(userId = userId) {
   await Fetch("/apps/group/leaveGroup", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
     userId: userId,
+  });
+  closeMembersPopUpBox();
+}
+
+async function addAdmin(userId) {
+  await Fetch("/apps/group/addAdmin", {
+    key: window.localStorage.getItem("key"),
+    userId: userId,
+    groupId: groupId,
+  });
+  closeMembersPopUpBox();
+}
+
+async function removeAdmin(userId) {
+  await Fetch("/apps/group/removeAdmin", {
+    key: window.localStorage.getItem("key"),
+    userId: userId,
+    groupId: groupId,
   });
   closeMembersPopUpBox();
 }

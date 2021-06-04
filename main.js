@@ -11,9 +11,9 @@ const io = new Server(server);
 
 app.use("/app", express.static("files/page/app"));
 app.use("/page", express.static("files/page/page"));
-app.use("/admin", express.static("files/page/admin"));
 app.use("/static", express.static("files/page/static"));
 app.use(express.json());
+
 app.use(function (err, req, res, next) {
   console.error("Error");
   res.status(200).send({ success: false, error: 7 });

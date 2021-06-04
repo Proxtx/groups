@@ -86,7 +86,7 @@ var chatModule = {
     }
   },
 
-  delete: async function (db, channelId) {
+  deleteChannelApp: async function (db, channelId) {
     await db.collection("chatMessages").deleteMany({ channelId: channelId });
     return;
   },

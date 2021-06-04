@@ -5,6 +5,7 @@
   width: 70%;
   top: 0;
   background-color: var(--bgL3);
+  box-shadow: black -2px 0px 20px 0px;
 }
 #groupOverview {
   position: absolute;
@@ -13,18 +14,18 @@
   height: 100%;
   width: 30%;
   background-color: var(--bgL2);
-  box-shadow: inset black -2px 0px 20px 0px;
-  color: white;
+  color: var(--textColor);
 }
 #groupImage {
   width: 30%;
-  margin-top: 20px;
+  margin-top: 40px;
   border-radius: 5px;
   margin-left: 15px;
 }
-#groupTitle {
+#groupName {
   margin-left: 15px;
   margin-top: 15px;
+  color: var(--textBackground);
 }
 #channelList {
   margin-top: 20px;
@@ -44,4 +45,14 @@
   position: relative;
   top: 5px;
   cursor: pointer;
+}
+#viewAllGroupsText {
+  position: relative;
+  top: 20px;
+  color: var(--textBackground);
+  margin: 15px;
+  cursor: pointer;
+}
+#viewAllGroupsText:hover {
+  color: var(--accentColor);
 }

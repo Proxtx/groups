@@ -1,5 +1,3 @@
-var groupId = "xiyoch1qmsmo7lp27";
-
 var userId;
 
 var groupScreen = new screen();
@@ -10,7 +8,7 @@ groupScreen.init("groupViewScreen");
 
 var groupInfo = {};
 
-async function main() {
+async function initGroupView() {
   userId = (
     await Fetch("/auth/key", {
       key: window.localStorage.getItem("key"),
@@ -25,8 +23,8 @@ async function main() {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
   });
-  document.getElementById("groupTitle").children[0].innerHTML =
-    groupInfo.group.title;
+  document.getElementById("groupName").children[0].innerHTML =
+    groupInfo.group.name;
   document.getElementById("groupImage").src =
     "/file/get/" + groupInfo.group.img;
 
@@ -41,7 +39,6 @@ async function main() {
     groupInfo.group.channels[0].channelId
   );
 }
-main();
 
 function newChannelListEntry(title, ChannelId) {
   var node = document
@@ -172,3 +169,5 @@ async function deleteChannel() {
     channelId: this.channelId,
   });
 }
+
+initGroupView();

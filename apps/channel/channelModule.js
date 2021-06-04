@@ -87,8 +87,8 @@ var channelModule = {
       ) {
         if (global.apps[app] && global.apps[app].channel) {
           var App = require("../" + app + "/" + global.apps[app].channel);
-          if (App.init) {
-            App.init(db, channelId, Key);
+          if (App.initChannelApp) {
+            App.initChannelApp(db, channelId, Key);
           }
           await db
             .collection("channels")
@@ -115,8 +115,8 @@ var channelModule = {
           .count()) > 0
       ) {
         var App = require("../" + app + "/" + global.apps[app].channel);
-        if (App.delete) {
-          await App.delete(db, channelId, Key);
+        if (App.deleteChannelApp) {
+          await App.deleteChannelApp(db, channelId, Key);
         }
         await db
           .collection("channels")

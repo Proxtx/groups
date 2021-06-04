@@ -1,1 +1,0 @@
-loadScreen("home");

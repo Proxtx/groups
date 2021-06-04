@@ -54,7 +54,7 @@ var fileModule = {
     }
   },
 
-  delete: async function (db, channelId, Key) {
+  deleteChannelApp: async function (db, channelId, Key) {
     var files = await db
       .collection("channelFiles")
       .find({ channelId: channelId })
