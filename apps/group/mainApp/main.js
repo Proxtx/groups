@@ -2,9 +2,19 @@ var groupId;
 
 var groupMainScreen = new screen();
 
+var userChat = false;
+
 groupMainScreen.init("groupMainAppScreen");
 
 async function main() {
+  perms.create_groups = (
+    await Fetch(url + "/perm/get", {
+      id: { system: true },
+      perm: "create_groups",
+      userId: userId,
+    })
+  ).state;
+
   displayGroups(
     (
       await Fetch(url + "/apps/group/listGroups", {
@@ -41,19 +51,21 @@ function displayGroups(groups) {
       groups[i].groupId
     );
   }
-  newGroupSlector(
-    "New Group",
-    url + "/apps/group/mainApp/plus.png",
-    1,
-    async function () {
-      var nG = await Fetch(url + "/apps/group/initGroup", {
-        key: window.localStorage.getItem("key"),
-        name: "New Group",
-        users: [userId],
-      });
-      loadGroup(nG.groupId);
-    }
-  );
+  if (perms.create_groups) {
+    newGroupSlector(
+      "New Group",
+      url + "/apps/group/mainApp/plus.png",
+      1,
+      async function () {
+        var nG = await Fetch(url + "/apps/group/initGroup", {
+          key: window.localStorage.getItem("key"),
+          name: "New Group",
+          users: [userId],
+        });
+        loadGroup(nG.groupId);
+      }
+    );
+  }
 }
 
 async function loadGroup(GroupId) {

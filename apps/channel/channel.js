@@ -4,7 +4,7 @@ var channelModule = require("./channelModule");
 const router = express.Router();
 
 global.channel.addStatic("", "channelViewer");
-global.channel.addStatic("testTab", "testTab");
+global.channel.addStatic("mainApp", "mainApp");
 
 router.post("/initChannel", async (req, res) => {
   res
@@ -40,32 +40,6 @@ router.post("/setChannelTitle", async (req, res) => {
         req.body.key,
         req.body.channelId,
         req.body.title
-      )
-    );
-});
-
-router.post("/leaveChannel", async (req, res) => {
-  res
-    .status(200)
-    .send(
-      await channelModule.leaveChannel(
-        req.app.locals.db,
-        req.body.key,
-        req.body.channelId,
-        req.body.userId
-      )
-    );
-});
-
-router.post("/addMember", async (req, res) => {
-  res
-    .status(200)
-    .send(
-      await channelModule.addMember(
-        req.app.locals.db,
-        req.body.key,
-        req.body.channelId,
-        req.body.users
       )
     );
 });

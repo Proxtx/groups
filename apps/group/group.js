@@ -14,7 +14,8 @@ router.post("/initGroup", async (req, res) => {
         req.app.locals.db,
         req.body.users,
         req.body.name,
-        req.body.key
+        req.body.key,
+        req.body.userChat
       )
     );
 });
@@ -137,7 +138,13 @@ router.post("/deleteGroup", async (req, res) => {
 router.post("/listGroups", async (req, res) => {
   res
     .status(200)
-    .send(await groupModule.listGroups(req.app.locals.db, req.body.key));
+    .send(
+      await groupModule.listGroups(
+        req.app.locals.db,
+        req.body.key,
+        req.body.userChat
+      )
+    );
 });
 
 module.exports = router;

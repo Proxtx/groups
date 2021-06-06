@@ -165,16 +165,26 @@ function initShowMembers() {
     ]);
     if (isGroupAdmin) {
       for (var x in userData) {
-        var options = [
-          {
-            name: "Kick",
-            job: leaveGroup.bind(this, x),
-          },
-          {
-            name: "Make Admin",
-            job: addAdmin.bind(this, x),
-          },
-        ];
+        var options;
+        if (userChat) {
+          options = [
+            {
+              name: "Kick",
+              job: leaveGroup.bind(this, x),
+            },
+          ];
+        } else {
+          options = [
+            {
+              name: "Kick",
+              job: leaveGroup.bind(this, x),
+            },
+            {
+              name: "Make Admin",
+              job: addAdmin.bind(this, x),
+            },
+          ];
+        }
         if (userData[x].isGroupAdmin) {
           options[1] = {
             name: "Remove Admin",

@@ -4,10 +4,15 @@ var genString = require("../../modules/genString");
 var perm = require("../../modules/perm");
 
 var groupModule = {
-  initGroup: async function (db, users, name, Key) {
+  initGroup: async function (db, users, name, Key, userChat = false) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
-      if (await perm.get(db, { system: true }, "create_groups", auth.userId)) {
+      if (
+        ((await perm.get(db, { system: true }, "create_groups", auth.userId)) &&
+          !userChat) ||
+        ((await perm.get(db, { system: true }, "create_chats", auth.userId)) &&
+          userChat)
+      ) {
         for (var i in users) {
           if (users[i] == auth.userId) {
             var groupId = await genString.returnString(
@@ -25,15 +30,19 @@ var groupModule = {
               auth.userId,
               true
             );
-            await db.collection("groups").insertOne({
+            var insertJson = {
               name: name,
               users: users,
               groupId: groupId,
               time: Date.now(),
               img: "default",
               channels: [],
-            });
-            await this.addChannel(db, Key, groupId, "General");
+            };
+            if (userChat) {
+              insertJson.userChat = true;
+            }
+            await db.collection("groups").insertOne(insertJson);
+            await this.addChannel(db, Key, groupId, name, true);
             return { success: true, groupId: groupId };
           }
         }
@@ -123,9 +132,10 @@ var groupModule = {
     }
   },
 
-  addChannel: async function (db, Key, groupId, title) {
+  addChannel: async function (db, Key, groupId, title, ignoreChat = false) {
     var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
+      if (groupOwn.userChat && !ignoreChat) return { success: false, error: 2 };
       var channel = await channelModule.initChannel(db, title, Key, groupId);
       var channelId = channel.channelId;
       if (channel.success) {
@@ -144,6 +154,7 @@ var groupModule = {
   deleteChannel: async function (db, Key, groupId, channelId) {
     var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
+      if (groupOwn.userChat) return { success: false, error: 2 };
       var channel = await channelModule.delete(db, channelId, Key);
       if (channel.success) {
         await db
@@ -190,16 +201,33 @@ var groupModule = {
     }
   },
 
-  listGroups: async function (db, Key) {
+  listGroups: async function (db, Key, userChat = false) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
+      var searchJson = { users: auth.userId, userChat: { $exists: false } };
+      if (userChat) searchJson.userChat = userChat;
       var groups = await db
         .collection("groups")
-        .find({ users: auth.userId })
-        .project({ name: 1, groupId: 1, img: 1 })
+        .find(searchJson)
+        .project({ name: 1, groupId: 1, img: 1, channels: 1 })
         .toArray();
       var rGroups = [];
       for (var i in groups) {
+        var channels = groups[i].channels;
+        if (userChat) {
+          var channelNames = [];
+          for (var x in channels) {
+            channelNames.push(
+              (
+                await db
+                  .collection("channels")
+                  .find({ channelId: channels[x] })
+                  .project({ title: 1 })
+                  .toArray()
+              )[0].title
+            );
+          }
+        }
         var p = {
           name: groups[i].name,
           groupId: groups[i].groupId,
@@ -210,7 +238,11 @@ var groupModule = {
             "admin",
             auth.userId
           ),
+          channels: channels,
         };
+        if (userChat) {
+          p.channelNames = channelNames;
+        }
         rGroups.push(p);
       }
       return { success: true, groups: rGroups };
@@ -246,13 +278,16 @@ var groupModule = {
       groupId = groupId;
       var group = await db
         .collection("groups")
-        .find({ groupId: groupId, users: auth.userId });
+        .find({ groupId: groupId, users: auth.userId })
+        .project({ userChat: 1 })
+        .toArray();
       if (
-        (await group.count()) > 0 &&
+        group.length > 0 &&
         (permS == "read" ||
+          group[0].userChat ||
           (await perm.get(db, { groupId: groupId }, permS, auth.userId)))
       ) {
-        return { success: true, auth: auth };
+        return { success: true, auth: auth, userChat: group[0].userChat };
       } else {
         return { success: false, error: 6 };
       }

@@ -1,0 +1,20 @@
+#chatList {
+  background-color: var(--bgL2);
+  width: 30%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#chatChannelScreen {
+  position: absolute;
+  top: 0;
+  left: 30%;
+  background-color: var(--bgL3);
+  width: 70%;
+  height: 100%;
+}
+#newChat {
+  margin: 10px;
+  float: unset;
+}

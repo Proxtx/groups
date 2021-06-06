@@ -7,6 +7,11 @@ groupScreen.init("groupViewScreen");
 var groupInfo = {};
 
 async function initGroupView() {
+  if (userChat) {
+    document.getElementById("groupViewScreen").style.left = "0";
+    document.getElementById("groupViewScreen").style.width = "100%";
+  }
+
   isGroupAdmin = await getPerm({ groupId: groupId }, "admin", userId);
 
   applyPermStyle({ groupId: groupId }, "admin", userId, "group");

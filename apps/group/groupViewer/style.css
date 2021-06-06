@@ -6,6 +6,7 @@
   top: 0;
   background-color: var(--bgL3);
   box-shadow: black -2px 0px 20px 0px;
+  z-index: 1;
 }
 #groupOverview {
   position: absolute;
@@ -15,6 +16,7 @@
   width: 30%;
   background-color: var(--bgL2);
   color: var(--textColor);
+  z-index: 0;
 }
 #groupImage {
   width: 30%;

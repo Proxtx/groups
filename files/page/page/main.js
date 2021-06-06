@@ -1,5 +1,7 @@
 var pageScreen = new screen();
 
+var perms = {};
+
 var url = "/main";
 
 pageScreen.init("pageScreen");

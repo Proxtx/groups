@@ -5,7 +5,9 @@
     "appName": "Chat"
   },
   "channel": {
-    "entry": "channel.js"
+    "entry": "channel.js",
+    "img": "chat.png",
+    "appName": "Chat"
   },
   "group": {
     "entry": "group.js",
