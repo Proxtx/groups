@@ -6,21 +6,26 @@ var channelModule = {
   initChannel: async function (db, title, Key, groupId) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
-      var channelId = await genString.returnString(
-        db,
-        "channels",
-        {},
-        "channelId"
-      );
-      await db.collection("channels").insertOne({
-        title: title,
-        groupId: groupId,
-        channelId: channelId,
-        time: Date.now(),
-      });
-      await this.addApp(db, Key, channelId, "chat");
-      await this.addApp(db, Key, channelId, "file");
-      return { success: true, channelId: channelId };
+      if (await perm.get(db, { groupId: groupId }, "admin", auth.userId)) {
+        var channelId = await genString.returnString(
+          db,
+          "channels",
+          {},
+          "channelId"
+        );
+        await db.collection("channels").insertOne({
+          title: title,
+          groupId: groupId,
+          channelId: channelId,
+          time: Date.now(),
+          apps: [],
+        });
+        await this.addApp(db, Key, channelId, "chat");
+        await this.addApp(db, Key, channelId, "file");
+        return { success: true, channelId: channelId };
+      } else {
+        return { success: true, error: 2 };
+      }
     } else {
       return auth;
     }

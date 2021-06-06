@@ -42,7 +42,7 @@ var chatModule = {
                 .project({ channelId: 1, time: 1 })
                 .toArray()
             )[0];
-            if (channel.time != this.lastUpdateTime) {
+            if (channel && channel.time != this.lastUpdateTime) {
               var channelId = channel.channelId;
               for (var i in global.socketHandler.subs.chat[channelId]) {
                 var channelOwn = await channelModule.channelOwn(

@@ -1,5 +1,7 @@
 var pageScreen = new screen();
 
+var url = "";
+
 pageScreen.init("pageScreen");
 
 async function main() {

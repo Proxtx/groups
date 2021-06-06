@@ -443,11 +443,14 @@ function addAppPopUp() {
           value: "",
         },
         { name: "uButtonMain", text: "Ok", id: "addAppConfirm", click: addApp },
+        { name: "uButtonSecondary", text: "Cancel", click: deleteAddAppPopUp },
       ],
     },
   ]);
+}
 
-  addToPopUpCloseList(document.getElementById("addAppPopUp"));
+function deleteAddAppPopUp() {
+  document.getElementById("addAppPopUp").remove();
 }
 
 async function addApp() {
@@ -456,4 +459,5 @@ async function addApp() {
     key: window.localStorage.getItem("key"),
     app: document.getElementById("addAppInput").value,
   });
+  deleteAddAppPopUp();
 }

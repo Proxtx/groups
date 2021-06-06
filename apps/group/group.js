@@ -13,7 +13,7 @@ router.post("/initGroup", async (req, res) => {
       await groupModule.initGroup(
         req.app.locals.db,
         req.body.users,
-        req.body.title,
+        req.body.name,
         req.body.key
       )
     );
@@ -105,6 +105,31 @@ router.post("/removeAdmin", async (req, res) => {
         req.body.key,
         req.body.groupId,
         req.body.userId
+      )
+    );
+});
+
+router.post("/renameGroup", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.renameGroup(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId,
+        req.body.name
+      )
+    );
+});
+
+router.post("/deleteGroup", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await groupModule.deleteGroup(
+        req.app.locals.db,
+        req.body.key,
+        req.body.groupId
       )
     );
 });

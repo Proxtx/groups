@@ -7,29 +7,40 @@ var groupModule = {
   initGroup: async function (db, users, name, Key) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
-      for (var i in users) {
-        if (users[i] == auth.userId) {
-          var groupId = await genString.returnString(
-            db,
-            "groups",
-            {},
-            "groupId"
-          );
-          var channelId = (
-            await channelModule.initChannel(db, "General", Key, groupId)
-          ).channelId;
-          await db.collection("groups").insertOne({
-            name: name,
-            users: users,
-            groupId: groupId,
-            time: Date.now(),
-            img: "default",
-            channels: [channelId],
-          });
-          return { success: true, groupId: groupId };
+      if (await perm.get(db, { system: true }, "create_groups", auth.userId)) {
+        for (var i in users) {
+          if (users[i] == auth.userId) {
+            var groupId = await genString.returnString(
+              db,
+              "groups",
+              {},
+              "groupId"
+            );
+            await perm.set(
+              db,
+              {
+                groupId: groupId,
+              },
+              "admin",
+              auth.userId,
+              true
+            );
+            await db.collection("groups").insertOne({
+              name: name,
+              users: users,
+              groupId: groupId,
+              time: Date.now(),
+              img: "default",
+              channels: [],
+            });
+            await this.addChannel(db, Key, groupId, "General");
+            return { success: true, groupId: groupId };
+          }
         }
+        return { success: false, code: 4 };
+      } else {
+        return { success: false, error: 2 };
       }
-      return { success: false, code: 2 };
     } else {
       return auth;
     }
@@ -167,6 +178,18 @@ var groupModule = {
     }
   },
 
+  renameGroup: async function (db, Key, groupId, name) {
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
+    if (groupOwn.success) {
+      await db
+        .collection("groups")
+        .updateOne({ groupId: groupId }, { $set: { name: name } });
+      return { success: true };
+    } else {
+      return groupOwn;
+    }
+  },
+
   listGroups: async function (db, Key) {
     var auth = await key.getKey(db, Key);
     if (auth.success) {
@@ -193,6 +216,27 @@ var groupModule = {
       return { success: true, groups: rGroups };
     } else {
       return auth;
+    }
+  },
+
+  deleteGroup: async function (db, Key, groupId) {
+    var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
+    if (groupOwn.success) {
+      var channels = (
+        await db
+          .collection("groups")
+          .find({ groupId: groupId })
+          .project({ channels: 1 })
+          .toArray()
+      )[0].channels;
+      for (var i in channels) {
+        await this.deleteChannel(db, Key, groupId, channels[i]);
+      }
+      await perm.deleteById(db, { groupId: groupId });
+      await db.collection("groups").deleteMany({ groupId: groupId });
+      return { success: true };
+    } else {
+      return groupOwn;
     }
   },
 

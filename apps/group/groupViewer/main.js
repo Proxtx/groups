@@ -1,5 +1,3 @@
-var userId;
-
 var groupScreen = new screen();
 
 var isGroupAdmin = false;
@@ -9,12 +7,6 @@ groupScreen.init("groupViewScreen");
 var groupInfo = {};
 
 async function initGroupView() {
-  userId = (
-    await Fetch("/auth/key", {
-      key: window.localStorage.getItem("key"),
-    })
-  ).userId;
-
   isGroupAdmin = await getPerm({ groupId: groupId }, "admin", userId);
 
   applyPermStyle({ groupId: groupId }, "admin", userId, "group");
@@ -78,30 +70,6 @@ async function selectChannel(node, ChannelId) {
 }
 
 var currentGroupOptionsNode;
-
-function showGroupOptions() {
-  processNodeObj(document.body, [
-    {
-      name: "uBoxSmall",
-      title: "",
-      top: y + "px",
-      left: x + "px",
-      id: "groupOptionsPopUp",
-      styles: [["padding", "5px"]],
-      nodes: [
-        {
-          name: "uButtonSecondary",
-          text: "Add Channel",
-          styles: [["margin", "0px"]],
-          click: showAddChannelTitleInput,
-        },
-      ],
-    },
-  ]);
-  window.setTimeout(function () {
-    currentGroupOptionsNode = document.getElementById("groupOptionsPopUp");
-  }, 100);
-}
 
 var x = null;
 var y = null;
@@ -169,5 +137,70 @@ async function deleteChannel() {
     channelId: this.channelId,
   });
 }
+
+function renameGroup() {
+  processNodeObj(document.body, [
+    {
+      name: "uBoxSmall",
+      title: "Rename Group",
+      id: "renameGroupPopUp",
+      top: y + "px",
+      left: x + "px",
+      nodes: [
+        {
+          name: "uInput",
+          id: "renameGroupInput",
+        },
+        {
+          name: "uButtonMain",
+          text: "Ok",
+          click: sendRenameGroup,
+        },
+        {
+          name: "uButtonSecondary",
+          text: "Cancel",
+          click: function () {
+            deleteElement("renameGroupPopUp");
+          },
+        },
+      ],
+    },
+  ]);
+}
+
+function deleteElement(id) {
+  document.getElementById(id).remove();
+}
+
+async function sendRenameGroup() {
+  await Fetch("/apps/group/renameGroup", {
+    key: window.localStorage.getItem("key"),
+    name: document.getElementById("renameGroupInput").value,
+    groupId: groupId,
+  });
+  deleteElement("renameGroupPopUp");
+}
+
+function addGroupOptions() {
+  var p = new popUp();
+  p.addPopUp(
+    [
+      { name: "Add Channel", job: showAddChannelTitleInput },
+      { name: "Rename Group", job: renameGroup },
+      { name: "Delete Group", job: deleteGroup },
+    ],
+    document.getElementById("groupOptions")
+  );
+}
+
+async function deleteGroup() {
+  await Fetch("/apps/group/deleteGroup", {
+    groupId: groupId,
+    key: window.localStorage.getItem("key"),
+  });
+  unloadGroup();
+}
+
+addGroupOptions();
 
 initGroupView();

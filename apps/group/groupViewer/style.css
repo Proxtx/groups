@@ -56,3 +56,6 @@
 #viewAllGroupsText:hover {
   color: var(--accentColor);
 }
+.group_admin {
+  display: unset;
+}

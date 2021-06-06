@@ -1,3 +1,5 @@
+var userId;
+
 var mainScreen = new screen();
 
 mainScreen.init("mainScreen");
@@ -5,6 +7,11 @@ mainScreen.init("mainScreen");
 var apps = [];
 
 async function main() {
+  userId = (
+    await Fetch("/auth/key", {
+      key: window.localStorage.getItem("key"),
+    })
+  ).userId;
   var Apps = (
     await Fetch("/apps/main/listApps", {
       key: window.localStorage.getItem("key"),
