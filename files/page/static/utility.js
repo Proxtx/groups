@@ -126,7 +126,7 @@ function createElement(name, parentObj) {
 
 async function loadAllUtilityNodes(display = false) {
   var txt = await (
-    await fetch("/static/utility.html", {
+    await fetch(url + "/static/utility.html", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

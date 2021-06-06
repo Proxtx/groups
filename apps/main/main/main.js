@@ -8,19 +8,19 @@ var apps = [];
 
 async function main() {
   userId = (
-    await Fetch("/auth/key", {
+    await Fetch(url + "/auth/key", {
       key: window.localStorage.getItem("key"),
     })
   ).userId;
   var Apps = (
-    await Fetch("/apps/main/listApps", {
+    await Fetch(url + "/apps/main/listApps", {
       key: window.localStorage.getItem("key"),
     })
   ).apps;
   for (var i in Apps) {
     apps.push({
       name: Apps[i].name,
-      img: "/apps/main/appImg/" + Apps[i].app,
+      img: url + "/apps/main/appImg/" + Apps[i].app,
       app: Apps[i].app,
     });
   }

@@ -8,14 +8,14 @@ class screen {
   loadScreen = async function (path, startFile = "index.html") {
     if (!this.currentlyLoading) {
       this.currentlyLoading = true;
-      var result = await fetch(path + "/" + startFile, {
+      var result = await fetch(url + path + "/" + startFile, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
       document.getElementById(this.screenId).innerHTML = "";
-      var txt = (await result.text()).replaceAll("$PATH", path);
+      var txt = (await result.text()).replaceAll("$PATH", url + path);
       try {
         txt = replaceTranslation(txt, "_");
       } catch (e) {

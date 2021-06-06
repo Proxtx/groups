@@ -9,9 +9,9 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use("/app", express.static("files/page/app"));
-app.use("/page", express.static("files/page/page"));
-app.use("/static", express.static("files/page/static"));
+app.use("/main/app", express.static("files/page/app"));
+app.use("/main/page", express.static("files/page/page"));
+app.use("/main/static", express.static("files/page/static"));
 app.use(express.json());
 
 app.use(function (err, req, res, next) {
@@ -33,12 +33,12 @@ const perm = require("./router/perm");
 var apps = require("./modules/apps");
 var socketHandler = require("./modules/socketHandler");
 
-app.use("/auth", auth);
-app.use("/profile", profile);
-app.use("/verify", verify);
-app.use("/file", file);
-app.use("/settings", settings);
-app.use("/perm", perm);
+app.use("/main/auth", auth);
+app.use("/main/profile", profile);
+app.use("/main/verify", verify);
+app.use("/main/file", file);
+app.use("/main/settings", settings);
+app.use("/main/perm", perm);
 
 async function main() {
   console.log("Loading config...");

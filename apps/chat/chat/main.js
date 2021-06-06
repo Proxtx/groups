@@ -62,15 +62,16 @@ function genChatBox(
 async function addMissingChatMember(userId) {
   leftUserData[userId] = {};
   leftUserData[userId].author = (
-    await Fetch("/profile/data", {
+    await Fetch(url + "/profile/data", {
       userId: userId,
       data: "username",
     })
   ).data;
   leftUserData[userId].img =
+    url +
     "/file/get/" +
     (
-      await Fetch("/profile/data", {
+      await Fetch(url + "/profile/data", {
         userId: userId,
         data: "profileImage",
       })
@@ -82,7 +83,7 @@ async function main() {
   scv.initScrollview(
     document.getElementById("chatBg"),
     async function (start, amount) {
-      return await Fetch("/apps/chat/getMessages", {
+      return await Fetch(url + "/apps/chat/getMessages", {
         key: window.localStorage.getItem("key"),
         channelId: channelId,
         start: start,
@@ -102,7 +103,7 @@ async function main() {
 }
 
 async function makeChatBox(msg, appendTop = true) {
-  var image = "/file/get/default";
+  var image = url + "/file/get/default";
   var author = "You are not supposed to see this!";
   var text = msg.message.text;
   var showAuthor = true;
@@ -174,7 +175,7 @@ document
   });
 
 async function sendMessage() {
-  await Fetch("/apps/chat/sendMessage", {
+  await Fetch(url + "/apps/chat/sendMessage", {
     key: window.localStorage.getItem("key"),
     channelId: channelId,
     text: document.getElementById("inputMessage").value,

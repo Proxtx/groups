@@ -1,7 +1,7 @@
-var imagePath = "/apps/file/channelEmbed/file.png";
+var imagePath = url + "/apps/file/channelEmbed/file.png";
 
 async function displayFiles() {
-  var result = await Fetch("/apps/file/list", {
+  var result = await Fetch(url + "/apps/file/list", {
     key: window.localStorage.getItem("key"),
     channelId: channelId,
   });
@@ -114,7 +114,7 @@ async function displayFiles() {
     document.getElementById("file." + x).addEventListener(
       "click",
       function () {
-        window.open("/file/get/" + this.file);
+        window.open(url + "/file/get/" + this.file);
       }.bind({ file: result.files[x].fileId })
     );
 
@@ -178,14 +178,14 @@ function uploadFile(
   formData.append("web", elem.files[0]);
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "/file/upload/" + uploadPerm);
+  xhr.open("POST", url + "/file/upload/" + uploadPerm);
   xhr.send(formData);
   xhr.onload = job;
 }
 
 async function requestFileUploadPerms() {
   var fileInput = document.getElementById("fileUpload");
-  var result = await Fetch("/apps/file/upload", {
+  var result = await Fetch(url + "/apps/file/upload", {
     key: window.localStorage.getItem("key"),
     channelId: channelId,
     fileName: fileInput.files[0].name,
@@ -251,7 +251,7 @@ function hideFileOptions() {
 }
 
 async function deleteFile() {
-  await Fetch("/apps/file/delete", {
+  await Fetch(url + "/apps/file/delete", {
     key: window.localStorage.getItem("key"),
     channelId: channelId,
     fileId: this.fileId,

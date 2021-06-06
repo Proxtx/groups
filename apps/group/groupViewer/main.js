@@ -11,14 +11,14 @@ async function initGroupView() {
 
   applyPermStyle({ groupId: groupId }, "admin", userId, "group");
 
-  groupInfo = await Fetch("/apps/group/info", {
+  groupInfo = await Fetch(url + "/apps/group/info", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
   });
   document.getElementById("groupName").children[0].innerHTML =
     groupInfo.group.name;
   document.getElementById("groupImage").src =
-    "/file/get/" + groupInfo.group.img;
+    url + "/file/get/" + groupInfo.group.img;
 
   for (var i in groupInfo.group.channels) {
     newChannelListEntry(
@@ -122,7 +122,7 @@ async function cancelAddChannelTitleInput() {
 }
 
 async function addChannel() {
-  await Fetch("/apps/group/addChannel", {
+  await Fetch(url + "/apps/group/addChannel", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
     title: document.getElementById("addChannelTitle").value,
@@ -131,7 +131,7 @@ async function addChannel() {
 }
 
 async function deleteChannel() {
-  await Fetch("/apps/group/deleteChannel", {
+  await Fetch(url + "/apps/group/deleteChannel", {
     key: window.localStorage.getItem("key"),
     groupId: groupId,
     channelId: this.channelId,
@@ -173,7 +173,7 @@ function deleteElement(id) {
 }
 
 async function sendRenameGroup() {
-  await Fetch("/apps/group/renameGroup", {
+  await Fetch(url + "/apps/group/renameGroup", {
     key: window.localStorage.getItem("key"),
     name: document.getElementById("renameGroupInput").value,
     groupId: groupId,
@@ -194,7 +194,7 @@ function addGroupOptions() {
 }
 
 async function deleteGroup() {
-  await Fetch("/apps/group/deleteGroup", {
+  await Fetch(url + "/apps/group/deleteGroup", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
   });

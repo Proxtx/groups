@@ -14,12 +14,12 @@ var apps = {
     }
     global[appName].addStatic = function (path, filePath) {
       app.use(
-        "/apps/" + this.name + "/" + path,
+        "/main/apps/" + this.name + "/" + path,
         express.static("apps/" + this.name + "/" + filePath)
       );
     };
     app.use(
-      "/apps/" + appName,
+      "/main/apps/" + appName,
       require("../apps/" + appName + "/" + this.apps[appName].entry)
     );
     console.log("Loaded " + appName + " Succesfully");

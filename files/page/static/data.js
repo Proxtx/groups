@@ -9,7 +9,7 @@ async function getProfileData(data, methode, auth1, auth2) {
     json.password = auth2;
   }
 
-  return await Fetch(url + "/profile/data", json);
+  return await Fetch(url + url + "/profile/data", json);
 }
 
 async function getDataKey(data) {

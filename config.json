@@ -1,6 +1,6 @@
 {
-    "host": 3050,
-    "dbUrl": "cluster0.9ool6.mongodb.net",
-    "dbUser": "groupsdbaccess",
-    "dbPwd": "2OnHNEzstyJICz3C"
+  "host": 3050,
+  "dbUrl": "cluster0.9ool6.mongodb.net",
+  "dbUser": "groupsdbaccess",
+  "dbPwd": "2OnHNEzstyJICz3C"
 }

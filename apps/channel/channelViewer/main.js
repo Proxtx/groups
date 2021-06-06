@@ -6,14 +6,15 @@ appScreen.init("channelViewScreen");
 
 async function initChannel() {
   var channelInfo = (
-    await Fetch("/apps/channel/getChannelInfo", {
+    await Fetch(url + "/apps/channel/getChannelInfo", {
       key: window.localStorage.getItem("key"),
       channelId: channelId,
     })
   ).channel;
 
   document.getElementById("chatTitleText").innerHTML = channelInfo.title;
-  document.getElementById("chatImage").src = "/file/get/" + channelInfo.img;
+  document.getElementById("chatImage").src =
+    url + "/file/get/" + channelInfo.img;
 
   for (var i in channelInfo.apps) {
     tabs.push({
@@ -34,22 +35,23 @@ initChannel();
 async function addMemberDataToList(userId) {
   userData[userId] = {};
   userData[userId].author = (
-    await Fetch("/profile/data", {
+    await Fetch(url + "/profile/data", {
       userId: userId,
       data: "username",
     })
   ).data;
   userData[userId].img =
+    url +
     "/file/get/" +
     (
-      await Fetch("/profile/data", {
+      await Fetch(url + "/profile/data", {
         userId: userId,
         data: "profileImage",
       })
     ).data;
 
   userData[userId].isGroupAdmin = (
-    await Fetch("/perm/get", {
+    await Fetch(url + "/perm/get", {
       userId: userId,
       id: {
         groupId: groupId,
@@ -91,7 +93,7 @@ function initChangeChatName() {
     document
       .getElementById("saveChatTitle")
       .addEventListener("click", async function (ev) {
-        await Fetch("/apps/channel/setChannelTitle", {
+        await Fetch(url + "/apps/channel/setChannelTitle", {
           channelId: channelId,
           key: window.localStorage.getItem("key"),
           title: document.getElementById("changeChatTitleInput").value,
@@ -194,7 +196,7 @@ function closeMembersPopUpBox() {
 }
 
 async function leaveGroup(userId = userId) {
-  await Fetch("/apps/group/leaveGroup", {
+  await Fetch(url + "/apps/group/leaveGroup", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
     userId: userId,
@@ -203,7 +205,7 @@ async function leaveGroup(userId = userId) {
 }
 
 async function addAdmin(userId) {
-  await Fetch("/apps/group/addAdmin", {
+  await Fetch(url + "/apps/group/addAdmin", {
     key: window.localStorage.getItem("key"),
     userId: userId,
     groupId: groupId,
@@ -212,7 +214,7 @@ async function addAdmin(userId) {
 }
 
 async function removeAdmin(userId) {
-  await Fetch("/apps/group/removeAdmin", {
+  await Fetch(url + "/apps/group/removeAdmin", {
     key: window.localStorage.getItem("key"),
     userId: userId,
     groupId: groupId,
@@ -265,7 +267,7 @@ async function addMember() {
   for (var i in users) {
     uid.push(
       (
-        await Fetch("/profile/data", {
+        await Fetch(url + "/profile/data", {
           email: users[i],
           data: "userId",
         })
@@ -273,7 +275,7 @@ async function addMember() {
     );
   }
 
-  var result = await Fetch("/apps/group/addMember", {
+  var result = await Fetch(url + "/apps/group/addMember", {
     groupId: groupId,
     key: window.localStorage.getItem("key"),
     users: uid,
@@ -410,7 +412,7 @@ document.addEventListener("click", function () {
 });
 
 async function deleteApp() {
-  await Fetch("/apps/channel/deleteApp", {
+  await Fetch(url + "/apps/channel/deleteApp", {
     channelId: channelId,
     app: this.app,
     key: window.localStorage.getItem("key"),
@@ -454,7 +456,7 @@ function deleteAddAppPopUp() {
 }
 
 async function addApp() {
-  await Fetch("/apps/channel/addApp", {
+  await Fetch(url + "/apps/channel/addApp", {
     channelId: channelId,
     key: window.localStorage.getItem("key"),
     app: document.getElementById("addAppInput").value,

@@ -10,7 +10,7 @@ async function applyPermStyle(id, perm, userId, styleId) {
 
 async function getPerm(id, perm, userId) {
   return (
-    await Fetch("/perm/get", {
+    await Fetch(url + "/perm/get", {
       id: id,
       perm: perm,
       userId: userId,

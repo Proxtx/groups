@@ -1,6 +1,6 @@
 var pageScreen = new screen();
 
-var url = "";
+var url = "/main";
 
 pageScreen.init("pageScreen");
 

@@ -7,7 +7,7 @@ groupMainScreen.init("groupMainAppScreen");
 async function main() {
   displayGroups(
     (
-      await Fetch("/apps/group/listGroups", {
+      await Fetch(url + "/apps/group/listGroups", {
         key: window.localStorage.getItem("key"),
       })
     ).groups
@@ -37,16 +37,16 @@ function displayGroups(groups) {
   for (var i in groups) {
     newGroupSlector(
       groups[i].name,
-      "/file/get/" + groups[i].img,
+      url + "/file/get/" + groups[i].img,
       groups[i].groupId
     );
   }
   newGroupSlector(
     "New Group",
-    "/apps/group/mainApp/plus.png",
+    url + "/apps/group/mainApp/plus.png",
     1,
     async function () {
-      var nG = await Fetch("/apps/group/initGroup", {
+      var nG = await Fetch(url + "/apps/group/initGroup", {
         key: window.localStorage.getItem("key"),
         name: "New Group",
         users: [userId],
