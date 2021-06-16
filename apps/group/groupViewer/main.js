@@ -25,16 +25,29 @@ async function initGroupView() {
   document.getElementById("groupImage").src =
     url + "/file/get/" + groupInfo.group.img;
 
+  var loadChannel = false;
+  var channelNode;
+
   for (var i in groupInfo.group.channels) {
-    newChannelListEntry(
+    var tmpNode = newChannelListEntry(
       groupInfo.group.channels[i].title,
       groupInfo.group.channels[i].channelId
     );
+
+    if (
+      linkArguments &&
+      linkArguments[0] == groupInfo.group.channels[i].channelId
+    ) {
+      loadChannel = groupInfo.group.channels[i].channelId;
+      channelNode = tmpNode;
+    }
   }
-  selectChannel(
-    document.getElementById("channelList").children[0],
-    groupInfo.group.channels[0].channelId
-  );
+  if (linkArguments && loadChannel) selectChannel(channelNode, loadChannel);
+  else
+    selectChannel(
+      document.getElementById("channelList").children[0],
+      groupInfo.group.channels[0].channelId
+    );
 }
 
 function newChannelListEntry(title, ChannelId) {

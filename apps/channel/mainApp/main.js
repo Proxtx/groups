@@ -15,13 +15,20 @@ async function main() {
     })
   ).groups;
 
+  var linkChat = false;
+
   for (var i in chats) {
     newChatSelector(
       chats[i].channelNames[0],
       url + "/file/get/" + chats[i].img,
       chats[i].groupId
     );
+    if (linkArguments && linkArguments[0] == chats[i].groupId) {
+      linkChat = chats[i].groupId;
+    }
   }
+
+  if (linkArguments) loadGroupChat(linkChat);
 }
 
 function newChatSelector(name, img, groupId) {
@@ -45,10 +52,12 @@ function newChatSelector(name, img, groupId) {
 }
 
 async function deleteChat() {
-  await Fetch(url + "/apps/group/deleteGroup", {
-    key: window.localStorage.getItem("key"),
-    groupId: this.groupId,
-  });
+  console.log(
+    await Fetch(url + "/apps/group/deleteGroup", {
+      key: window.localStorage.getItem("key"),
+      groupId: this.groupId,
+    })
+  );
 }
 
 async function loadGroupChat(GroupId) {
@@ -117,8 +126,6 @@ async function addMember() {
       ).data
     );
   }
-
-  console.log(names);
 
   uid.push(userId);
 

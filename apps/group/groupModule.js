@@ -151,10 +151,17 @@ var groupModule = {
     }
   },
 
-  deleteChannel: async function (db, Key, groupId, channelId) {
+  deleteChannel: async function (
+    db,
+    Key,
+    groupId,
+    channelId,
+    groupChatIgnore = false
+  ) {
     var groupOwn = await this.groupOwn(db, Key, groupId, "admin");
     if (groupOwn.success) {
-      if (groupOwn.userChat) return { success: false, error: 2 };
+      if (groupOwn.userChat && !groupChatIgnore)
+        return { success: false, error: 2 };
       var channel = await channelModule.delete(db, channelId, Key);
       if (channel.success) {
         await db
@@ -262,7 +269,7 @@ var groupModule = {
           .toArray()
       )[0].channels;
       for (var i in channels) {
-        await this.deleteChannel(db, Key, groupId, channels[i]);
+        await this.deleteChannel(db, Key, groupId, channels[i], true);
       }
       await perm.deleteById(db, { groupId: groupId });
       await db.collection("groups").deleteMany({ groupId: groupId });

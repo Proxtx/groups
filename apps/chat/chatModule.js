@@ -1,5 +1,6 @@
 var scrollview = require("../../modules/scrollview");
 var channelModule = require("../channel/channelModule");
+var genString = require("../../modules/genString");
 
 var chatModule = {
   lastUpdateTime: 0,
@@ -7,11 +8,18 @@ var chatModule = {
   sendMessage: async function (db, Key, text, channelId) {
     var channelOwn = await channelModule.channelOwn(db, Key, channelId);
     if (channelOwn.success) {
+      var messageId = await genString.returnString(
+        db,
+        "chatMessages",
+        {},
+        "messageId"
+      );
       var data = {
         userId: channelOwn.auth.userId,
         time: Date.now(),
         message: { type: "text", text: text },
         channelId: channelId,
+        messageId: messageId,
       };
       await db.collection("chatMessages").insertOne(data);
       db.collection("channels").updateOne(
@@ -22,6 +30,19 @@ var chatModule = {
         { groupId: channelOwn.groupId },
         { $set: { time: Date.now() } }
       );
+      var users = (
+        await db
+          .collection("groups")
+          .find({ groupId: channelOwn.groupId })
+          .project({ users: 1 })
+          .toArray()
+      )[0];
+      await db.collection("notification").insertOne({
+        messageId: messageId,
+        users: users.users,
+        usersRead: [channelOwn.auth.userId],
+        time: Date.now(),
+      });
       return { success: true };
     } else {
       return channelOwn;

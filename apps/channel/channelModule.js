@@ -178,7 +178,7 @@ var channelModule = {
           .collection("groups")
           .find({ groupId: groupId, users: auth.userId, groupId: groupId });
         if ((await group.count()) > 0) {
-          return { success: true, auth: auth };
+          return { success: true, auth: auth, groupId: groupId };
         } else {
           return { success: false, error: 6 };
         }

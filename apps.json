@@ -20,6 +20,12 @@
     "channel": "fileModule.js",
     "appName": "File"
   },
+  "notification": {
+    "entry": "notification.js",
+    "appName": "Notifications",
+    "img": "notification.png",
+    "userApp": "notificationModule.js"
+  },
   "main": {
     "entry": "main.js"
   }

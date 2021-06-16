@@ -44,12 +44,24 @@ function newGroupSlector(name, img, groupId, click = false) {
 }
 
 function displayGroups(groups) {
+  var foundLinkArgumentGroup = true;
+  if (linkArguments) {
+    foundLinkArgumentGroup = false;
+  }
   for (var i in groups) {
+    if (linkArguments && linkArguments[0] == groups[i].groupId) {
+      foundLinkArgumentGroup = true;
+      nextLinkSection();
+      loadGroup(groups[i].groupId);
+    }
     newGroupSlector(
       groups[i].name,
       url + "/file/get/" + groups[i].img,
       groups[i].groupId
     );
+  }
+  if (!foundLinkArgumentGroup) {
+    selectApp("channel", false);
   }
   if (perms.create_groups) {
     newGroupSlector(

@@ -41,18 +41,35 @@ function createMainApp(index, img, name) {
 
 function showApps() {
   for (var i in apps) {
-    apps[i].node = createMainApp(i, apps[i].img, apps[i].name);
+    apps[i].node = createMainApp(Number(i), apps[i].img, apps[i].name);
   }
 }
 
 var prevAppIndex = 0;
 
-function selectApp(index) {
+function selectApp(index, clearLinkArguments = true) {
+  if (clearLinkArguments) {
+    linkArguments = undefined;
+  }
   deselectApp(prevAppIndex);
-  apps[index].node.children[2].style.display = "unset";
-  apps[index].node.style.color = "var(--accentColor)";
-  prevAppIndex = index;
-  mainScreen.loadScreen("/apps/" + apps[index].app + "/mainApp");
+  var app;
+  var appIndex;
+  if (typeof index == "number") {
+    app = apps[index];
+    appIndex = index;
+  } else {
+    for (var i in apps) {
+      if (apps[i].app == index) {
+        app = apps[i];
+        appIndex = i;
+      }
+    }
+  }
+
+  app.node.children[2].style.display = "unset";
+  app.node.style.color = "var(--accentColor)";
+  prevAppIndex = appIndex;
+  mainScreen.loadScreen("/apps/" + app.app + "/mainApp");
 }
 
 function deselectApp(index) {
