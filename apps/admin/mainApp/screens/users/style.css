@@ -1,0 +1,8 @@
+#userScrollView {
+  position: absolute;
+  width: 100%;
+  height: calc(80% - 0.5px);
+  top: 20%;
+  overflow-y: scroll;
+  border-top: 0.5px solid var(--bgL1);
+}

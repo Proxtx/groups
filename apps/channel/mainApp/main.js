@@ -52,12 +52,10 @@ function newChatSelector(name, img, groupId) {
 }
 
 async function deleteChat() {
-  console.log(
-    await Fetch(url + "/apps/group/deleteGroup", {
-      key: window.localStorage.getItem("key"),
-      groupId: this.groupId,
-    })
-  );
+  await Fetch(url + "/apps/group/deleteGroup", {
+    key: window.localStorage.getItem("key"),
+    groupId: this.groupId,
+  });
 }
 
 async function loadGroupChat(GroupId) {

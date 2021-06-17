@@ -28,5 +28,11 @@
   },
   "main": {
     "entry": "main.js"
+  },
+  "admin": {
+    "entry": "admin.js",
+    "appName": "Admin",
+    "img": "admin.png",
+    "userApp": "adminModule.js"
   }
 }

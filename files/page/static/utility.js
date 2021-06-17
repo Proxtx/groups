@@ -63,13 +63,13 @@ var processNodeFunctions = {
   },
   uUserDisplay: function (node, obj) {
     node.children[0].src = obj.img;
-    node.children[1].innerHTML = obj.author;
+    node.children[1].innerText = obj.author;
   },
   uTextBackgroundInline: function (node, obj) {
     if (obj.strong) {
       node.innerHTML = "<strong>" + obj.text + "</strong>";
     } else {
-      node.innerHTML = obj.text;
+      node.innerText = obj.text;
     }
   },
   uImage: function (node, obj) {
