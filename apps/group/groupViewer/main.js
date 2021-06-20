@@ -12,9 +12,9 @@ async function initGroupView() {
     document.getElementById("groupViewScreen").style.width = "100%";
   }
 
-  isGroupAdmin = await getPerm({ groupId: groupId }, "admin", userId);
-
-  applyPermStyle({ groupId: groupId }, "admin", userId, "group");
+  isGroupAdmin =
+    (await getPerm({ groupId: groupId }, "admin", userId)) || userChat;
+  if (!userChat) applyPermStyle({ groupId: groupId }, "admin", userId, "group");
 
   groupInfo = await Fetch(url + "/apps/group/info", {
     groupId: groupId,

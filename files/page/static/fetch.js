@@ -25,6 +25,7 @@ async function parseResponse(responseText) {
         console.log(
           "The Programm should Logout the user ... If you see this message this programm is in a beta phase! If you are one of the devs please implement the logout screen!"
         );
+        showLogin();
       } else if (data.error == 3) {
         console.log("Error has been identified as an: Verification Error");
         console.log(

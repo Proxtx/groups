@@ -3,7 +3,9 @@ var genString = require("./genString");
 var key = {
   genKey: async function (db, userId) {
     var string = await genString.returnString(db, "keys", {}, "key");
-    await db.collection("keys").insertOne({ key: string, userId: userId });
+    await db
+      .collection("keys")
+      .insertOne({ key: string, userId: userId, time: Date.now() });
     return string;
   },
   getKey: async function (db, key) {
@@ -13,6 +15,7 @@ var key = {
         .collection("user")
         .find({ userId: result[0].userId })
         .toArray();
+      if (!user.length) return { success: false, error: 1 };
       if (user[0].verifyMail && user[0].verifyTel) {
         return {
           success: true,

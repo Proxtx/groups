@@ -1,0 +1,47 @@
+#adminUserDisplayWrap {
+  width: 100%;
+  height: 100%;
+}
+
+#adminUserDisplayTopBar {
+  width: 100%;
+  height: 30%;
+  overflow: hidden;
+  position: relative;
+}
+
+#adminUserDisplayTopBarBackground {
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  background-color: var(--accentColor);
+}
+
+#adminUserDisplayTopBarProfileImage {
+  position: relative;
+  height: 70%;
+  top: 5%;
+  left: 5%;
+  z-index: 1;
+  border-radius: 50%;
+  border: 4px solid var(--secondary);
+  display: inline;
+}
+
+#adminUserDisplayTopBarUsername {
+  display: inline;
+  margin-left: 5%;
+}
+
+.adminUserDisplayUserInfoListEntry {
+  width: calc(100% - 10px);
+  padding: 5px;
+}
+
+.adminUserDisplayUserInfoListEntry:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.adminUserDisplayUserInfoListEntryInfoValue {
+  float: right;
+}

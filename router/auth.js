@@ -21,22 +21,25 @@ router.post("/signin", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  var result = await auth.register(
-    req.app.locals.db,
-    req.body.email,
-    req.body.password,
-    req.body.username,
-    req.body.tel
-  );
+  if (false) {
+    var result = await auth.register(
+      req.app.locals.db,
+      req.body.email,
+      req.body.password,
+      req.body.username,
+      req.body.tel
+    );
 
-  if (result.success) {
-    res.status(200).send({
-      success: true,
-      key: await key.genKey(req.app.locals.db, result.userId),
-    });
-  } else {
-    res.status(200).send(result);
+    if (result.success) {
+      res.status(200).send({
+        success: true,
+        key: await key.genKey(req.app.locals.db, result.userId),
+      });
+    } else {
+      res.status(200).send(result);
+    }
   }
+  res.status(404).send("Public register is not enabled!");
 });
 
 router.post("/key", async (req, res) => {
@@ -45,6 +48,14 @@ router.post("/key", async (req, res) => {
 
 router.post("/getPerms", async (req, res) => {
   res.status(200).send(await auth.getPerms(req.app.locals.db, req.body.key));
+});
+
+router.post("/deleteUser", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await auth.deleteUser(req.app.locals.db, req.body.key, req.body.userId)
+    );
 });
 
 module.exports = router;

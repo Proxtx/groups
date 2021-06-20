@@ -24,4 +24,31 @@ router.post("/listUsers", async (req, res) => {
     );
 });
 
+router.post("/addPerm", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await adminModule.addPerm(
+        req.app.locals.db,
+        req.body.key,
+        req.body.perm,
+        req.body.userId
+      )
+    );
+});
+
+router.post("/registerNewUser", async (req, res) => {
+  res
+    .status(200)
+    .send(
+      await adminModule.registerNewUser(
+        req.app.locals.db,
+        req.body.key,
+        req.body.email,
+        req.body.pwd,
+        req.body.username
+      )
+    );
+});
+
 module.exports = router;

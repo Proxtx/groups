@@ -72,9 +72,102 @@ class popUp {
     });
     for (var j in this.options) {
       if (this.options[j].name == type) {
-        this.options[j].job();
+        await this.options[j].job();
       }
     }
+  };
+}
+
+class inputPopUp {
+  promote = async function (type) {
+    return type;
+  };
+  options;
+
+  addPopUp = function (options, node, trigger = { left: true }) {
+    this.options = options;
+    if (trigger.right) {
+      node.addEventListener(
+        "contextmenu",
+        function (e) {
+          var f = this.createPopUp.bind(this, e);
+          f();
+          e.preventDefault();
+        }.bind(this),
+        false
+      );
+    }
+    if (trigger.left) {
+      node.addEventListener(
+        "click",
+        function (e) {
+          var f = this.createPopUp.bind(this, e);
+          f();
+        }.bind(this)
+      );
+    }
+  };
+
+  createPopUp = async function (e) {
+    var promise = new Promise((resolve) => {
+      this.promote = resolve;
+    });
+
+    var id = Math.floor(Math.random() * 10000);
+    var inputId = Math.floor(Math.random() * 10000);
+    var cancelId = Math.floor(Math.random() * 10000);
+    var confirmId = Math.floor(Math.random() * 10000);
+    processNodeObj(document.body, [
+      {
+        name: "uBoxSmall",
+        title: this.options.title,
+        top: y + "px",
+        left: x + "px",
+        id: id,
+        nodes: [
+          {
+            name: "uInput",
+            placeholder: this.options.placeholder,
+            id: inputId,
+          },
+          {
+            name: "uButtonMain",
+            text: this.options.confirm,
+            click: this.promote.bind(this, "confirm"),
+            id: confirmId,
+          },
+          {
+            name: "uButtonSecondary",
+            text: "Cancel",
+            click: this.promote.bind(this, "cancel"),
+            id: cancelId,
+          },
+        ],
+      },
+    ]);
+    if (e.pageX > window.innerWidth / 2) {
+      document.getElementById(id).style.transform = "translateX(-100%)";
+    }
+
+    if (this.options.elemInit)
+      this.options.elemInit(
+        document.getElementById(id),
+        document.getElementById(inputId),
+        document.getElementById(confirmId),
+        document.getElementById(cancelId)
+      );
+
+    var type;
+    await promise.then((result) => {
+      type = result;
+    });
+
+    if (type == "confirm") {
+      if (this.options.click)
+        await this.options.click(document.getElementById(inputId).value);
+    }
+
+    document.getElementById(id).remove();
   };
 }
 

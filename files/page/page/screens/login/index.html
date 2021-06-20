@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="$PATH/style.css" />
+
+<div id="backgroundWrap">
+  <div id="loginWrap">
+    <div id="loginBox">
+      <div id="content1">
+        <img class="logoShow" /><br />
+        <a id="loginText">Sign In</a>
+        <input
+          id="emailInput"
+          class="cInput"
+          type="email"
+          placeholder="Email"
+        />
+
+        <button class="MSButton" onclick="next()">Next</button>
+      </div>
+      <div id="content2">
+        <img class="logoShow" /><br />
+        <img id="arrow" onclick="reset()" /><a
+          id="emailShow"
+          class="textWithMargin"
+        ></a>
+        <br />
+        <a id="loginText">Password</a
+        ><input
+          class="cInput"
+          type="password"
+          placeholder="Password"
+          id="passwordInput"
+        />
+        <button class="MSButton" onclick="signIn()">Sign In</button>
+      </div>
+      <div id="content3"></div>
+    </div>
+  </div>
+</div>
+
+<script src="$PATH/main.js"></script>

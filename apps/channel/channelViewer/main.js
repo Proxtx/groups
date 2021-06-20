@@ -185,7 +185,7 @@ function initShowMembers() {
             },
           ];
         }
-        if (userData[x].isGroupAdmin) {
+        if (userData[x].isGroupAdmin && !userChat) {
           options[1] = {
             name: "Remove Admin",
             job: removeAdmin.bind(this, x),

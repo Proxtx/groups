@@ -1,4 +1,7 @@
 var genString = require("./genString");
+var key = require("./key");
+var perm = require("./perm");
+var config = require("./config");
 
 var auth = {
   signin: async function (db, email, password) {
@@ -28,6 +31,7 @@ var auth = {
       return { success: false, error: 5, text: "Already Exists" };
     } else {
       if (email && username && password && tel) {
+        var cfg = await config.getConfig();
         var userId = await genString.returnString(db, "user", {}, "userId");
         await db.collection("user").insertOne({
           email: email,
@@ -37,9 +41,20 @@ var auth = {
           verifyTel: true,
           verifyMail: true,
           userId: userId,
-          lvl: 0,
           profileImage: "default",
         });
+        await db
+          .collection("userApps")
+          .insertOne({ userId: userId, apps: cfg.newUser.apps });
+        for (var i in cfg.newUser.perms) {
+          await perm.set(
+            db,
+            { system: true },
+            cfg.newUser.perms[i],
+            userId,
+            true
+          );
+        }
         return { success: true, userId: userId };
       } else {
         return { success: false, error: 4, text: "Missing Data" };
@@ -52,6 +67,22 @@ var auth = {
       return { success: true, userId: (await user.toArray())[0].userId };
     } else {
       return { success: false, error: 6 };
+    }
+  },
+  deleteUser: async function (db, Key, userId) {
+    var auth = await key.getKey(db, Key);
+    if (auth.success) {
+      if (await perm.get(db, { system: true }, "manage_users", auth.userId)) {
+        await db.collection("user").deleteMany({ userId: userId });
+        await db.collection("keys").deleteMany({ userId: userId });
+        await db.collection("userApps").deleteMany({ userId: userId });
+        await db.collection("perms").deleteMany({ userId: userId });
+        return { success: true };
+      } else {
+        return { success: false, error: 2 };
+      }
+    } else {
+      return auth;
     }
   },
 };

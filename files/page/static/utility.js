@@ -49,9 +49,6 @@ var processNodeFunctions = {
   },
   uButton: function (node, obj) {
     node.innerHTML = obj.text;
-    if (obj.click) {
-      node.addEventListener("click", obj.click);
-    }
   },
   uInput: function (node, obj) {
     if (obj.value) {
@@ -93,6 +90,9 @@ function processNodeObj(parentObj, nodes) {
     nodeId[nodes[i].id] = node;
     if (nodes[i].id) {
       node.id = nodes[i].id;
+    }
+    if (nodes[i].click) {
+      node.addEventListener("click", nodes[i].click);
     }
     if (processNodeFunctions[nodes[i].name]) {
       var nodesSub = processNodeFunctions[nodes[i].name](node, nodes[i]);

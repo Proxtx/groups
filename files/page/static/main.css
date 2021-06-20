@@ -8,6 +8,7 @@
 * {
   margin: 0;
   font-family: segeo;
+  box-sizing: border-box;
 }
 *:focus {
   outline: none;

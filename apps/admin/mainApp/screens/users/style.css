@@ -6,3 +6,7 @@
   overflow-y: scroll;
   border-top: 0.5px solid var(--bgL1);
 }
+
+#createUserButton {
+  float: unset;
+}

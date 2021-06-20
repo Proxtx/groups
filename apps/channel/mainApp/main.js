@@ -77,7 +77,6 @@ async function openAddMember() {
         id: "memberAddBox",
         styles: [
           ["zIndex", 3],
-          ["right", "0px"],
           ["left", "unset"],
         ],
         nodes: [
@@ -126,6 +125,14 @@ async function addMember() {
   }
 
   uid.push(userId);
+  names.push(
+    (
+      await Fetch(url + "/profile/data", {
+        userId: userId,
+        data: "username",
+      })
+    ).data
+  );
 
   var result = await Fetch(url + "/apps/group/initGroup", {
     groupId: groupId,
