@@ -1,5 +1,3 @@
-var genString = require("./genString");
-
 var socketHandler = {
   onConnect: [function (socket) {}],
 

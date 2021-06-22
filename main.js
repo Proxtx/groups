@@ -45,7 +45,7 @@ async function main() {
   config = await config.getConfig();
   console.log("Connecting to Cluster...");
   MongoClient.connect(
-    "mongodb+srv://" + config.dbUser + ":" + config.dbPwd + "@" + config.dbUrl,
+    config.clusterUrl,
     { useNewUrlParser: true, useUnifiedTopology: true },
     async function (err, client) {
       if (err) {
@@ -53,7 +53,7 @@ async function main() {
       }
       console.log("Connected to Cluster!");
       console.log("Selecting Database!");
-      var db = client.db("groups");
+      var db = client.db(config.database);
       app.locals.db = db;
       console.log("Loading Apps...");
       await apps.loadApps(app, express);
@@ -65,6 +65,36 @@ async function main() {
       server.listen(config.host);
       console.log("\x1b[41m\x1b[37m\x1b[4m\x1b[5m\x1b[1m", "Server Started");
       console.log("\x1b[0m", "");
+      if (config.setup) {
+        console.log("Setup detected! Please only run this ONCE!");
+        console.log("Creating default file... ");
+        await db.collection("files").updateOne(
+          { fileId: "default" },
+          {
+            $set: {
+              path: "default/x.jpg",
+              fileTypeId: "default",
+            },
+          },
+          {
+            upsert: true,
+          }
+        );
+
+        console.log("Creating admin account... ");
+        var authModule = require("./modules/auth");
+        var userId = (
+          await authModule.register(db, "admin", "admin", "admin", "000000000")
+        ).userId;
+
+        console.log("Adding admin perms... ");
+        var perm = require("./modules/perm");
+        await perm.set(db, { system: true }, "admin", userId, true);
+
+        console.log(
+          "Setup finished! Please set setup to false in config.json!"
+        );
+      }
     }
   );
 }
