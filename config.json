@@ -1,6 +1,5 @@
 {
   "host": 3050,
-  "_clusterUrl": "mongodb+srv://groupsdbaccess:2OnHNEzstyJICz3C@cluster0.9ool6.mongodb.net",
   "clusterUrl": "mongodb://localhost:27017/",
   "database": "groups",
   "newUser": {
